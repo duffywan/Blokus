@@ -5,6 +5,7 @@ angular.module('myApp', []).factory('gameLogic', function() {
  * Returns the initial Blokus board, which is a 20 * 20 matrix containing ''.
  */
 function getInitialBoard() {
+//
 	return [
 			[ '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
 					'', '', '', '' ],

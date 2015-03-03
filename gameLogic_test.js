@@ -352,10 +352,10 @@ describe("Blokus", function() {
 	                   ['2','','','0','','','3','3','3','3','2','','3','2','2','2','3','3','','3'],
 	                   ['2','2','0','','0','0','','2','2','2','3','3','3','','','2','3','','3','3']],
 	          playerStatus : [false, false, false, false],
-	          freeShapes : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]],
+	          freeShapes : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]],
 	          delta : {shape : 0, placement : [[0, 17]]}};
 	  var turnIndex = 3;
 	  var generatedPossibleMoves = _gameLogic.getPossibleMoves(stateBeforeMove, 3);
