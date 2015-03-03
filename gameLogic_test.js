@@ -32,7 +32,8 @@ describe("Blokus", function() {
   });
   
   it ("an example of a legal placement", function() {
-	 var board =  [['0','','1','','','','','','','','','','','','','','','','',''],
+	 var board =  [['0','','','','','','','','','','','','','','','','','','','1'],
+                   ['0','','','','','','','','','','','','','','','','','','',''],
                    ['','','','','','','','','','','','','','','','','','','',''],
                    ['','','','','','','','','','','','','','','','','','','',''],
                    ['','','','','','','','','','','','','','','','','','','',''],
@@ -50,10 +51,9 @@ describe("Blokus", function() {
                    ['','','','','','','','','','','','','','','','','','','',''],
                    ['','','','','','','','','','','','','','','','','','','',''],
                    ['','','','','','','','','','','','','','','','','','','',''],
-                   ['','','','','','','','','','','','','','','','','','','',''],
-                   ['','','','','','','','','','','','','','','','','','','','']];
-	 var placement = [[1,1]];
-	 var turnIndex = 1;
+                   ['2','','','','','','','','','','','','','','','','','','','3']];
+	 var placement = [[2,1]];
+	 var turnIndex = 0;
 	 expect(_gameLogic.legalPlacement(board, placement, turnIndex)).toBe(true);
   });
   
@@ -139,10 +139,10 @@ describe("Blokus", function() {
 			        	                   ['','','','','','','','','','','','','','','','','','','',''],
 			        	                   ['','','','','','','','','','','','','','','','','','','','']]}},
 			  {set : {key : 'playerStatus', value : [true, true, true, true]}},
-			  {set : {key : 'freeShapes', value : [[false, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true], 
-			           	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-			        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-			        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true]]}},
+			  {set : {key : 'freeShapes', value : [[false, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+			           	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+			        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+			        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]]}},
 			  {set : {key : 'delta', value : {shape : 0, placement : [[0,0]]}}}];
 	  var generatedMove = _gameLogic.createMove(stateBeforeMove, placement, shape, turnIndex);
 	  expect(angular.equals(expectedMove, generatedMove)).toBe(true);
@@ -170,10 +170,10 @@ describe("Blokus", function() {
 	                   ['','','','','','','','','','','','','','','','','','','',''],
 	                   ['','','','','','','','','','','','','','','','','','','','']],
 	          playerStatus : [true, true, true, true],
-	          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true], 
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true]],
+	          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]],
 	          delta : {}};
 	  var move = [{setTurn : {turnIndex : 1}},
 				  {set : {key : 'board', value : [['0','','','','','','','','','','','','','','','','','','',''],
@@ -197,10 +197,10 @@ describe("Blokus", function() {
 					        	                   ['','','','','','','','','','','','','','','','','','','',''],
 					        	                   ['','','','','','','','','','','','','','','','','','','','']]}},
 					  {set : {key : 'playerStatus', value : [true, true, true, true]}},
-					  {set : {key : 'freeShapes', value : [[false, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true], 
-					           	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-					        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-					        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true]]}},
+					  {set : {key : 'freeShapes', value : [[false, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+					           	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+					        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+					        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]]}},
 					  {set : {key : 'delta', value : {shape : 0, placement : [[0,0]]}}}];
 	  var turnIndexBeforeMove = 0;
 	  var params = {move : move ,stateBeforeMove : stateBeforeMove,turnIndexBeforeMove : turnIndexBeforeMove};
@@ -230,10 +230,10 @@ describe("Blokus", function() {
 	                   ['','','','','','','','','','','','','','','','','','','',''],
 	                   ['','','','','','','','','','','','','','','','','','','','']],
 	          playerStatus : [true, true, true, true],
-	          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true], 
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true]],
+	          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]],
 	          delta : {}};
 	  var move = [{setTurn : {turnIndex : 1}},
 				  {set : {key : 'board', value : [['','0','','','','','','','','','','','','','','','','','',''],
@@ -257,10 +257,10 @@ describe("Blokus", function() {
 					        	                   ['','','','','','','','','','','','','','','','','','','',''],
 					        	                   ['','','','','','','','','','','','','','','','','','','','']]}},
 					  {set : {key : 'playerStatus', value : [true, true, true, true]}},
-					  {set : {key : 'freeShapes', value : [[false, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true], 
-					           	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-					        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-					        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true]]}},
+					  {set : {key : 'freeShapes', value : [[false, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+					           	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+					        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+					        	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]]}},
 					  {set : {key : 'delta', value : {shape : 0, placement : [[0,0]]}}}];
 	  var turnIndexBeforeMove = 0;
 	  var params = {move : move ,stateBeforeMove : stateBeforeMove,turnIndexBeforeMove : turnIndexBeforeMove};
@@ -290,10 +290,10 @@ describe("Blokus", function() {
 	                   ['2','','','0','','','3','3','3','3','2','','3','2','2','2','3','3','','3'],
 	                   ['2','2','0','','0','0','','2','2','2','3','3','3','','','2','3','','3','3']],
 	          playerStatus : [false, false, false, true],
-	          freeShapes : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]],
+	          freeShapes : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]],
 	          delta : {shape : 0, placement : [[17, 19]]}};
 	  var placement = [[0,17]];
 	  var shape = 0;
@@ -320,10 +320,10 @@ describe("Blokus", function() {
 			        	                   ['2','','','0','','','3','3','3','3','2','','3','2','2','2','3','3','','3'],
 			        	                   ['2','2','0','','0','0','','2','2','2','3','3','3','','','2','3','','3','3']]}},
 			  {set : {key : 'playerStatus', value : [false, false, false, false]}},
-			  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-			           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-			        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-			        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
+			  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+			           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+			        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+			        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
 			  {set : {key : 'delta', value : {shape : 0, placement : [[0,17]]}}}];
 	  var generatedMove = _gameLogic.createMove(stateBeforeMove, placement, shape, turnIndex);
 	  expect(angular.equals(expectedMove, generatedMove)).toBe(true);
@@ -386,10 +386,10 @@ describe("Blokus", function() {
 	                   ['2','','','0','','','3','3','3','3','2','','3','2','2','2','3','3','','3'],
 	                   ['2','2','0','','0','0','','2','2','2','3','3','3','','','2','3','','3','3']],
 	          playerStatus : [false, false, false, true],
-	          freeShapes : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-	                        [true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]],
+	          freeShapes : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	                        [true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]],
 	          delta : {shape : 0, placement : [[17, 19]]}};
 	  var turnIndex = 3;
 	  var generatedPossibleMoves = _gameLogic.getPossibleMoves(stateBeforeMove, turnIndex);
@@ -415,10 +415,10 @@ describe("Blokus", function() {
 				        	                   ['2','','','0','','','3','3','3','3','2','','3','2','2','2','3','3','','3'],
 				        	                   ['2','2','0','','0','0','','2','2','2','3','3','3','','','2','3','','3','3']]}},
 					  {set : {key : 'playerStatus', value : [false, false, false, false]}},
-					  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-					           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-					        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-					        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
+					  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+					           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+					        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+					        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
 					  {set : {key : 'delta', value : {shape : 0, placement : [[0,17]]}}}];
 	  var move1 = [{endMatch : {endMatchScore : [90, 90, 90, 90]}},
 					  {set : {key : 'board', value : [['0','0','','0','1','','','0','0','0','1','1','1','','3','3','','','1','1'],
@@ -442,10 +442,10 @@ describe("Blokus", function() {
 					        	                   ['2','','','0','','','3','3','3','3','2','','3','2','2','2','3','3','','3'],
 					        	                   ['2','2','0','','0','0','','2','2','2','3','3','3','','','2','3','','3','3']]}},
 						  {set : {key : 'playerStatus', value : [false, false, false, false]}},
-						  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
+						  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
 						  {set : {key : 'delta', value : {shape : 0, placement : [[1,18]]}}}];
 	  var move2 = [{endMatch : {endMatchScore : [90, 90, 90, 90]}},
 				  {set : {key : 'board', value : [['0','0','','0','1','','','0','0','0','1','1','1','','3','3','','','1','1'],
@@ -469,10 +469,10 @@ describe("Blokus", function() {
 				        	                   ['2','','','0','','','3','3','3','3','2','','3','2','2','2','3','3','','3'],
 				        	                   ['2','2','0','','0','0','','2','2','2','3','3','3','','','2','3','','3','3']]}},
 					  {set : {key : 'playerStatus', value : [false, false, false, false]}},
-					  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
+					  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
 					  {set : {key : 'delta', value : {shape : 0, placement : [[4,1]]}}}];
 	  var move3 = [{endMatch : {endMatchScore : [90, 90, 90, 90]}},
 				  {set : {key : 'board', value : [['0','0','','0','1','','','0','0','0','1','1','1','','3','3','','','1','1'],
@@ -496,10 +496,10 @@ describe("Blokus", function() {
 				        	                   ['2','','','0','','','3','3','3','3','2','','3','2','2','2','3','3','','3'],
 				        	                   ['2','2','0','','0','0','','2','2','2','3','3','3','','','2','3','','3','3']]}},
 					  {set : {key : 'playerStatus', value : [false, false, false, false]}},
-					  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
+					  {set : {key : 'freeShapes', value : [[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						           	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
 					  {set : {key : 'delta', value : {shape : 0, placement : [[17,18]]}}}];
 	  var expectedPossibleMoves = [move0, move1, move2, move3];
 	  expect(angular.equals(expectedPossibleMoves, generatedPossibleMoves)).toBe(true);

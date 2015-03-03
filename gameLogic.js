@@ -87,10 +87,10 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 		stateBeforeMove = {
 				  board : getInitialBoard(),
 		          playerStatus : [true, true, true, true],
-		          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true], 
-		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true]],
+		          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]],
 		          delta : {}};
 	}
 	
@@ -280,7 +280,7 @@ function getScore(freeShapes) {
 					score[i] += 4;
 				}
 				if (j === 4 || j === 9 || j === 10 || j === 11 || j === 12
-						|| j === 13 || j === 15 || j === 16 || j === 16
+						|| j === 13 || j === 15 || j === 16
 						|| j === 18 || j === 19 || j === 20) {
 					score[i] += 5;
 				}
