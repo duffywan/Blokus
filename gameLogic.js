@@ -1,14 +1,11 @@
 'use strict';
 
 angular.module('myApp', []).factory('gameLogic', function() {
-
-/**
- * Returns the initial Blokus board, which is a 20 * 20 matrix containing ''.
- */
 /**
  * Returns the initial Blokus board, which is a 20 * 20 matrix containing ''.
  */
 function getInitialBoard() {
+//
 	return [
 			[ '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
 					'', '', '', '' ],
@@ -51,33 +48,56 @@ function getInitialBoard() {
 			[ '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
 					'', '', '', '' ] ];
 }
-/**
- * function getPossibleMoves(state, turnIndex) { // example state = {board :
- * [[...]...], // playerStatus : [true, true, true, true], freeShapes = [[true,
- * true, // false...], [], [], []], // delta : {shape : 0, placement : [[2,2]]} //
- * all 4 players are alive. player0 has #0, #1 shapes free, #2 shape not //
- * available. // last shape is put on the board is #0, placed at (2, 2). var
- * possibleMoves = []; var freeShapes = state.freeShapes; var board =
- * state.board; for (var i = 0; i < board.length; i++) { for (var j = 0; j <
- * board[0].length; j++) { if (board[i][j] === '') { for (var shape = 0; shape <
- * freeShapes[turnIndex].length; shape++) { if (!freeShapes[turnIndex][shape]) {
- * continue; } for (var r = 0; r < 4; r++) { // rotate the shape, r == 0 rotate
- * clockwise 90 degree. var nextPlacement = getPlacement(i, j, shape, r); if
- * (legalPlacement(board, nextPlacement, turnIndex)) {
- * possibleMoves.push(createMove(state, nextPlacement, shape, turnIndex)); } } } } } }
- * return possibleMoves; }
- */
+
+function getPossibleMoves(state, turnIndex) {
+	// example state = {board :[[...]...], playerStatus : [true, true, true,
+	// true], freeShapes = [[true,true, false...], [], [], []],
+	// delta : {shape : 0, placement : [[2,2]]}
+	// all 4 players are alive. player0 has #0, #1 shapes free, #2 shape not
+	// available. last shape is put on the board is #0, placed at (2, 2).
+	var possibleMoves = [];
+	var freeShapes = state.freeShapes;
+	var board = state.board;
+	for (var i = 0; i < board.length; i++) {
+		for (var j = 0; j < board[0].length; j++) {
+			if (board[i][j] === '') {
+				for (var shape = 0; shape < freeShapes[turnIndex].length; shape++) {
+					if (!freeShapes[turnIndex][shape]) {
+						continue;
+					}
+					var totalRotateCounts = getTotalRotateCount(shape);
+					for (var r = 0; r < totalRotateCounts; r++) {
+						// rotate the shape, r == 0 rotate clockwise 90 degree.
+						var placement = getPlacement(i, j, shape, r);
+						if (legalPlacement(board, placement, turnIndex)) {
+							possibleMoves.push(createMove(state, placement,
+									shape, turnIndex));
+						}
+					}
+				}
+			}
+		}
+	}
+	return possibleMoves;
+}
 
 function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 	// example move = {setTurn(2), setBoard([[...]]), setPlayerStatus(true,
 	// false, true, true), setFreeShapes([...],[...],[...],[...])};
+	if (stateBeforeMove === undefined) {
+		stateBeforeMove = {
+				  board : getInitialBoard(),
+		          playerStatus : [true, true, true, true],
+		          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]],
+		          delta : {}};
+	}
+	
 	var board = stateBeforeMove.board;
 	var playerStatus = stateBeforeMove.playerStatus;
 	var freeShapes = stateBeforeMove.freeShapes;
-
-	if (board === undefined) {
-		board = getInitialBoard();
-	}
 	if (!legalPlacement(board, placement, turnIndexBeforeMove)) {
 		throw new Error("illegal placement of a shape!");
 	}
@@ -181,8 +201,9 @@ function canMove(board, freeShapes, turnIndex) {
 }
 
 function getTotalRotateCount(shape) {
-	if (shape === 1 || shape === 2 || shape === 3 ||shape === 4 ||shape === 5 ||shape === 8 ||
-			shape === 10 ||shape === 11 ||shape === 14 ||shape === 16 ||shape === 17 ||shape === 19) {
+	if (shape === 1 || shape === 2 || shape === 3 || shape === 4 || shape === 5
+			|| shape === 8 || shape === 10 || shape === 11 || shape === 14
+			|| shape === 16 || shape === 17 || shape === 19) {
 		return 4;
 	} else if (shape === 0) {
 		return 1;
@@ -260,7 +281,7 @@ function getScore(freeShapes) {
 					score[i] += 4;
 				}
 				if (j === 4 || j === 9 || j === 10 || j === 11 || j === 12
-						|| j === 13 || j === 15 || j === 16 || j === 16
+						|| j === 13 || j === 15 || j === 16
 						|| j === 18 || j === 19 || j === 20) {
 					score[i] += 5;
 				}
@@ -377,7 +398,7 @@ function isFirstMove(board, turnIndex) {
 }
 
 function legalPlacement(board, placement, turnIndex) {
-	var corner = [];
+	var corner;
 	switch (turnIndex) {
 	case 0:
 		corner = [ 0, 0 ];
@@ -431,7 +452,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col - 1 ]);
 		}
 		break;
-		
+
 	case 2:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ]);
@@ -486,7 +507,7 @@ function getPlacement(row, col, shape, r) {
 					row, col - 3 ], [ row, col - 4 ]);
 		}
 		break;
-		
+
 	case 5:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ]);
@@ -631,7 +652,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
 					row - 1, col ], [ row + 1, col ]);
 		}
-		if (r ===2) {
+		if (r === 2) {
 			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
 					row, col - 1 ], [ row, col + 1 ]);
 		}
@@ -839,7 +860,7 @@ function getPlacement(row, col, shape, r) {
 					[ row + 1, col + 1 ]);
 		}
 		break;
-		
+
 	case 18:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ],
@@ -875,7 +896,7 @@ function getPlacement(row, col, shape, r) {
 
 		}
 		break;
-		
+
 	case 19:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
@@ -890,8 +911,8 @@ function getPlacement(row, col, shape, r) {
 					row, col - 1 ], [ row - 1, col ]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row - 1, col ],[
-					row, col + 1], [ row + 1, col ]);
+			placement.push([ row, col ], [ row, col - 1 ], [ row - 1, col ], [
+					row, col + 1 ], [ row + 1, col ]);
 		}
 		break;
 
@@ -930,14 +951,16 @@ function getPlacement(row, col, shape, r) {
 		}
 		break;
 	}
-	//console.log(placement);
+	// console.log(placement);
 	return placement;
 }
 
   return {
+      getScore: getScore,
       getInitialBoard: getInitialBoard,
       createMove: createMove,
       isMoveOk: isMoveOk,
-      legalPlacement: legalPlacement
+      legalPlacement: legalPlacement,
+      getPossibleMoves: getPossibleMoves
   };
 });
