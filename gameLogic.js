@@ -955,6 +955,7 @@ function getPlacement(row, col, shape, r) {
 }
 
   return {
+      getScore: getScore,
       getInitialBoard: getInitialBoard,
       createMove: createMove,
       isMoveOk: isMoveOk,
