@@ -83,13 +83,20 @@ function getPossibleMoves(state, turnIndex) {
 function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 	// example move = {setTurn(2), setBoard([[...]]), setPlayerStatus(true,
 	// false, true, true), setFreeShapes([...],[...],[...],[...])};
+	if (stateBeforeMove === undefined) {
+		stateBeforeMove = {
+				  board : getInitialBoard(),
+		          playerStatus : [true, true, true, true],
+		          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true], 
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
+		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true]],
+		          delta : {}};
+	}
+	
 	var board = stateBeforeMove.board;
 	var playerStatus = stateBeforeMove.playerStatus;
 	var freeShapes = stateBeforeMove.freeShapes;
-
-	if (board === undefined) {
-		board = getInitialBoard();
-	}
 	if (!legalPlacement(board, placement, turnIndexBeforeMove)) {
 		throw new Error("illegal placement of a shape!");
 	}
