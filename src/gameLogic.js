@@ -49,6 +49,17 @@ function getInitialBoard() {
 					'', '', '', '' ] ];
 }
 
+function getInitialFreeShapes() {
+	return [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+		    [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+		    [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+		    [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]];
+}
+
+function getInitialPlayerStatus() {
+	return [true, true, true, true];
+}
+
 function getPossibleMoves(state, turnIndex) {
 	// example state = {board :[[...]...], playerStatus : [true, true, true,
 	// true], freeShapes = [[true,true, false...], [], [], []],
@@ -84,26 +95,31 @@ function getPossibleMoves(state, turnIndex) {
 function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 	// example move = {setTurn(2), setBoard([[...]]), setPlayerStatus(true,
 	// false, true, true), setFreeShapes([...],[...],[...],[...])};
-	if (stateBeforeMove === undefined) {
+	console.log("calling create move");
+	if (stateBeforeMove === undefined || stateBeforeMove.board === undefined) {
 		stateBeforeMove = {
 				  board : getInitialBoard(),
-		          playerStatus : [true, true, true, true],
-		          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
-		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
-		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
-		                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]],
+		          playerStatus : getInitialPlayerStatus(),
+		          freeShapes : getInitialFreeShapes(),
 		          delta : {}};
 	}
-	
+	console.log("line 106");
+	console.log(stateBeforeMove);
 	var board = stateBeforeMove.board;
 	var playerStatus = stateBeforeMove.playerStatus;
 	var freeShapes = stateBeforeMove.freeShapes;
 	if (!legalPlacement(board, placement, turnIndexBeforeMove)) {
+		console.log(board);
+		console.log(placement);
+		console.log(turnIndexBeforeMove);
+		console.log("illegal placement of a shape!");
 		throw new Error("illegal placement of a shape!");
 	}
 	if (endOfMatch(playerStatus)) {
+		console.log("Can only make a move if the game is not over!");
 		throw new Error("Can only make a move if the game is not over!");
 	}
+	
 	// set up the board after move
 	var boardAfterMove = angular.copy(board);
 	var label = turnIndexBeforeMove.toString();
@@ -112,13 +128,14 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 		var col = placement[i][1];
 		boardAfterMove[row][col] = label;
 	}
-
+	
 	var freeShapesAfterMove = updateFreeShapes(turnIndexBeforeMove, freeShapes,
 			shape);
 	var playerStatusAfterMove = updatePlayerStatus(boardAfterMove,
 			freeShapesAfterMove, playerStatus);
 	var firstOperation = updateTurnIndex(turnIndexBeforeMove,
 			playerStatusAfterMove, freeShapesAfterMove);
+	console.log("gameLogic.createMove success!");
 	return [ firstOperation, {
 		set : {
 			key : 'board',
@@ -146,21 +163,26 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 }
 
 function isMoveOk(params) {
+	console.log("calling isMoveOk");
+	console.log(params);
 	var move = params.move;
 	var stateBeforeMove = params.stateBeforeMove;
 	var turnIndexBeforeMove = params.turnIndexBeforeMove;
 	try {
 		var shape = move[4].set.value.shape;
 		var placement = move[4].set.value.placement;
+		console.log(stateBeforeMove);
 		var expectedMove = createMove(stateBeforeMove, placement, shape,
 				turnIndexBeforeMove);
 		if (!angular.equals(move, expectedMove)) {
+			console.log("gameLogic.isMoveOk === false");
 			return false;
 		}
 	} catch (e) {
 		// if there are any exceptions then the move is illegal
 		return false;
 	}
+	console.log("isMoveOk === true");
 	return true;
 }
 
@@ -307,6 +329,7 @@ function cornerConnected(board, placement, turnIndex) {
 		var row = placement[i][0];
 		var col = placement[i][1];
 		if (inBounds(board, row + 1, col + 1)) {
+			
 			if (board[row + 1][col + 1] === label) {
 				return true;
 			}
@@ -326,8 +349,8 @@ function cornerConnected(board, placement, turnIndex) {
 				return true;
 			}
 		}
-		return false;
 	}
+	return false;
 }
 
 /** check whether the placement contains edge-to-edge connections */
@@ -951,16 +974,19 @@ function getPlacement(row, col, shape, r) {
 		}
 		break;
 	}
-	// console.log(placement);
 	return placement;
 }
 
   return {
       getScore: getScore,
       getInitialBoard: getInitialBoard,
+	  getInitialFreeShapes: getInitialFreeShapes,
+	  getInitialPlayerStatus: getInitialPlayerStatus,
       createMove: createMove,
       isMoveOk: isMoveOk,
       legalPlacement: legalPlacement,
-      getPossibleMoves: getPossibleMoves
+	  getPlacement: getPlacement,
+      getPossibleMoves: getPossibleMoves,
+	  getTotalRotateCount: getTotalRotateCount
   };
 });
