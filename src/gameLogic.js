@@ -603,7 +603,7 @@ function getPlacement(row, col, shape, r) {
 		}
 		if (r === 5) {
 			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col + 1 ], [ row, col + 1 ]);
+					[ row - 1, col + 1 ], [ row + 1, col]);
 		}
 		if (r === 6) {
 			placement.push([ row, col ], [ row + 1, col ],
@@ -691,7 +691,7 @@ function getPlacement(row, col, shape, r) {
 		}
 		if (r === 1) {
 			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row - 1, col ], [ row - 2, col ]);
+					row + 1, col ], [ row + 2, col ]);
 		}
 		if (r === 2) {
 			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
@@ -806,7 +806,7 @@ function getPlacement(row, col, shape, r) {
 	case 15:
 		if (r === 0) {
 			placement.push([ row, col ], [ row, col + 1 ],
-					[ row - 1, col + 1 ], [ row + 1, col ], [ row + 2, col ]);
+					[ row + 1, col], [ row + 1, col + 1], [ row + 2, col ]);
 		}
 		if (r === 1) {
 			placement.push([ row, col ], [ row + 1, col ],
@@ -814,7 +814,7 @@ function getPlacement(row, col, shape, r) {
 		}
 		if (r === 2) {
 			placement.push([ row, col ], [ row, col - 1 ],
-					[ row - 1, col - 1 ], [ row, col - 1 ], [ row, col - 2 ]);
+					[ row - 1, col], [ row - 1, col - 1 ], [ row - 2, col]);
 		}
 		if (r === 3) {
 			placement.push([ row, col ], [ row - 1, col ],
@@ -834,7 +834,7 @@ function getPlacement(row, col, shape, r) {
 		}
 		if (r === 7) {
 			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col + 1 ], [ row, col + 1 ], [ row, col + 2 ]);
+					[ row, col + 2 ], [ row + 1, col], [ row + 1, col + 1]);
 		}
 		break;
 
@@ -880,7 +880,7 @@ function getPlacement(row, col, shape, r) {
 		if (r === 3) {
 			placement.push([ row, col ], [ row, col - 1 ],
 					[ row - 1, col - 1 ], [ row, col + 1 ],
-					[ row + 1, col + 1 ]);
+					[ row - 1, col + 1 ]);
 		}
 		break;
 

@@ -645,135 +645,70 @@ angular.module('myApp')
       }
     }
 function getShape(row, col) {
-
       if (row === 0 && col === 2) {
-
         return 0;
-
       }
-
       if (col === 2 && (row === 2 || row === 3)) {
-
         return 1;
-
       }
-
       if (col === 2 && (row === 5 || row === 6 || row === 7)) {
-
         return 2;
-
       }
-
       if (col === 2 && (row === 9 || row === 10 || row === 11 || row === 12)) {
-
         return 3;
-
       }
-
       if (col === 2 && (row === 14 || row === 15 || row === 16 || row === 17 || row === 18)) {
-
         return 4;
-
       }
-
       if ((col === 2 && (row === 20 || row === 21)) || (row == 21 && col === 3)) {
-
         return 5;
-
       }
-
       if ((col === 2 && (row === 23 || row === 24 || row === 25)) || (row === 25 && col === 3)) {
-
         return 6;
-
       }
-
       if ((row === 27 && (col === 2 || col === 3)) || row === 28 && (col === 1 || col === 2)) {
-
         return 7;
-
       }
-
       if ((row === 30 && (col === 1 || col === 2)) || (row === 31 && (col === 1 || col === 2))) {
-
         return 8;
-
       }
-
       if ((row === 33 && col === 1) || (row === 34 && (col === 1 || col === 2 || col === 3 || col === 4))) {
-
         return 9;
-
       }
-
       if ((col === 2 && (row === 36 || row === 37 || row === 38)) || (row === 38 && (col === 1 || col === 3))) {
-
         return 10;
-
       }
-
       if ((col === 6 && (row === 0 || row === 1 || row === 2)) || (row === 2 && (col === 7 || col === 8))) {
-
         return 11;
-
       }
-
       if ((row === 4 && (col === 7 || col === 8 || col === 9)) || (row === 5 && (col === 6 || col === 7))) {
-
         return 12;
-
       }
-
       if ((row === 7 && col === 8) || (row === 8 && (col === 6 || col === 7 || col === 8)) || (row === 9 && col === 6)) {
-
         return 13;
-
       }
-
       if ((row === 11 && col === 7) || (row === 12 && (col === 6 || col === 7 || col === 8))) {
-
         return 14;
-
       }
-
       if ((col === 6 && (row === 14 || row === 15 || row === 16)) || (col === 7 && (row === 14 || row === 15))) {
-
         return 15;
-
       }
-
       if ((row === 18 && (col === 7 || col === 8)) || (row === 19 && (col === 6 || col === 7)) || (row === 20 && col === 6)) {
-
         return 16;
-
       }
-
       if ((col ===6 && (row === 22 || row === 23 || row === 24)) || (col === 7 && (row === 22 || row === 24))) {
-
         return 17;
-
       }
-
       if ((row === 27 && (col === 7 || col === 8)) || (row === 28 && (col === 6 || col === 7)) || (row === 29 && col === 7)) {
-
         return 18;
-
       }
-
-      if ((row === 32 && col === 7) || (row === 33 && (col === 6 || col === 7 || col === 8)) || (row === 12 && col === 15)) {
-
+      if ((row === 32 && col === 7) || (row === 33 && (col === 6 || col === 7 || col === 8)) || (row === 34 && col === 7)) {
         return 19;
-
       }
-
       if ((row === 37 && col === 7) || (row === 38 && (col === 6 || col === 7 || col === 8 || col === 9))) {
-
         return 20;
-
       }
-
       return -1;
-
     };
 
     function shapeAvaiable(row, col) {
