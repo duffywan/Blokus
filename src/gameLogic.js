@@ -76,9 +76,11 @@ function getPossibleMoves(state, turnIndex) {
 					if (!freeShapes[turnIndex][shape]) {
 						continue;
 					}
-					var totalRotateCounts = getTotalRotateCount(shape);
-					for (var r = 0; r < totalRotateCounts; r++) {
-						// rotate the shape, r == 0 rotate clockwise 90 degree.
+					for (var r = 0; r < 8; r++) {
+						// there are total 8 possible rotations
+						if (!isValidRotation(shape, r)) {
+							continue;
+						}
 						var placement = getPlacement(i, j, shape, r);
 						if (legalPlacement(board, placement, turnIndex)) {
 							possibleMoves.push(createMove(state, placement,
@@ -90,6 +92,27 @@ function getPossibleMoves(state, turnIndex) {
 		}
 	}
 	return possibleMoves;
+}
+/*return true if the rotation is valid for the shape*/
+function isValidRotation(shape, r) {
+	// there are total 8 rotations: rotate clockwise by 0, 90, 180, 270 degress. Mirrow the shape, and rotate clockwise by 0, 90, 180, 270 degrees.
+	// a rotation is valid only if the rotated shape is unique
+	if (shape === 0 || shape === 8 || shape === 19) {
+		return r === 0;
+	}
+	if (shape === 1 || shape === 2 || shape === 3 || shape === 4) {
+		return r === 0 || r === 1;
+	}
+	if (shape === 5 || shape === 10 || shape === 11 || shape === 14 || shaper === 16 || shape === 17) {
+		return r === 0 || r === 1 || r === 2 || r === 3;
+	}
+	if (shape === 7 || shape === 13) {
+		return r === 0 || r === 1 || r === 4 || r === 5;
+	}
+	if (shape === 6 || shape === 9 || shape === 12 || shape === 15 || shape === 18 || shape === 20) {
+		return true;
+	}
+	return false;
 }
 
 function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
@@ -468,12 +491,14 @@ function getPlacement(row, col, shape, r) {
 		if (r === 1) {
 			placement.push([ row, col ], [ row, col + 1 ]);
 		}
+		/*
 		if (r === 2) {
 			placement.push([ row, col ], [ row + 1, col ]);
 		}
 		if (r === 3) {
 			placement.push([ row, col ], [ row, col - 1 ]);
 		}
+		*/
 		break;
 
 	case 2:
@@ -483,12 +508,14 @@ function getPlacement(row, col, shape, r) {
 		if (r === 1) {
 			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ]);
 		}
+		/*
 		if (r === 2) {
 			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ]);
 		}
 		if (r === 3) {
 			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ]);
 		}
+		*/
 		break;
 
 	case 3:
@@ -500,16 +527,16 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
 					row, col + 3 ]);
 		}
+		/*
 		if (r === 2) {
 			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
 					row + 3, col ]);
 		}
-
 		if (r === 3) {
-
 			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
 					row, col - 3 ]);
 		}
+		*/
 		break;
 
 	case 4:
@@ -521,6 +548,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
 					row, col + 3 ], [ row, col + 4 ]);
 		}
+		/*
 		if (r === 2) {
 			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
 					row + 3, col ], [ row + 4, col ]);
@@ -529,6 +557,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
 					row, col - 3 ], [ row, col - 4 ]);
 		}
+		*/
 		break;
 
 	case 5:
@@ -589,6 +618,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col + 1 ],
 					[ row + 1, col + 1 ], [ row - 1, col ]);
 		}
+		/*
 		if (r === 2) {
 			placement.push([ row, col ], [ row + 1, col ],
 					[ row + 1, col - 1 ], [ row, col + 1 ]);
@@ -597,6 +627,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col - 1 ],
 					[ row - 1, col - 1 ], [ row + 1, col ]);
 		}
+		*/
 		if (r === 4) {
 			placement.push([ row, col ], [ row - 1, col ],
 					[ row - 1, col - 1 ], [ row, col + 1 ]);
@@ -605,31 +636,11 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col + 1 ],
 					[ row - 1, col + 1 ], [ row + 1, col]);
 		}
-		if (r === 6) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col + 1 ], [ row, col - 1 ]);
-		}
-		if (r === 7) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row + 1, col - 1 ], [ row - 1, col ]);
-		}
 		break;
 	case 8:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ],
 					[ row - 1, col + 1 ], [ row, col + 1 ]);
-		}
-		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col + 1 ], [ row + 1, col ]);
-		}
-		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col - 1 ], [ row, col - 1 ]);
-		}
-		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row - 1, col - 1 ], [ row - 1, col ]);
 		}
 		break;
 	case 9:
@@ -668,7 +679,7 @@ function getPlacement(row, col, shape, r) {
 		break;
 	case 10:
 		if (r === 0) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
+			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
 					row, col + 1 ], [ row, col - 1 ]);
 		}
 		if (r === 1) {
@@ -750,17 +761,6 @@ function getPlacement(row, col, shape, r) {
 					[ row + 1, col + 1 ], [ row - 1, col ],
 					[ row - 1, col - 1 ]);
 		}
-		if (r === 2) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row + 1, col - 1 ], [ row, col + 1 ],
-					[ row - 1, col + 1 ]);
-
-		}
-		if (r === 3) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col - 1 ], [ row + 1, col ],
-					[ row + 1, col + 1 ]);
-		}
 		if (r === 4) {
 			placement.push([ row, col ], [ row, col - 1 ],
 					[ row - 1, col - 1 ], [ row, col + 1 ],
@@ -771,16 +771,6 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row - 1, col ],
 					[ row - 1, col + 1 ], [ row + 1, col ],
 					[ row + 1, col - 1 ]);
-		}
-		if (r === 6) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col + 1 ], [ row, col - 1 ],
-					[ row - 1, col - 1 ]);
-		}
-		if (r === 7) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col - 1 ], [ row - 1, col ],
-					[ row - 1, col + 1 ]);
 		}
 		break;
 
@@ -924,18 +914,6 @@ function getPlacement(row, col, shape, r) {
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
 					row + 1, col ], [ row, col - 1 ]);
-		}
-		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row + 1, col ], [
-					row, col - 1 ], [ row - 1, col ]);
-		}
-		if (r === 2) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row + 1, col ], [
-					row, col - 1 ], [ row - 1, col ]);
-		}
-		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row - 1, col ], [
-					row, col + 1 ], [ row + 1, col ]);
 		}
 		break;
 
