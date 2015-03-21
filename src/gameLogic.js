@@ -118,7 +118,6 @@ function isValidRotation(shape, r) {
 function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 	// example move = {setTurn(2), setBoard([[...]]), setPlayerStatus(true,
 	// false, true, true), setFreeShapes([...],[...],[...],[...])};
-	console.log("calling create move");
 	if (stateBeforeMove === undefined || stateBeforeMove.board === undefined) {
 		stateBeforeMove = {
 				  board : getInitialBoard(),
@@ -126,23 +125,15 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 		          freeShapes : getInitialFreeShapes(),
 		          delta : {}};
 	}
-	console.log("line 106");
-	console.log(stateBeforeMove);
 	var board = stateBeforeMove.board;
 	var playerStatus = stateBeforeMove.playerStatus;
 	var freeShapes = stateBeforeMove.freeShapes;
 	if (!legalPlacement(board, placement, turnIndexBeforeMove)) {
-		console.log(board);
-		console.log(placement);
-		console.log(turnIndexBeforeMove);
-		console.log("illegal placement of a shape!");
 		throw new Error("illegal placement of a shape!");
 	}
 	if (endOfMatch(playerStatus)) {
-		console.log("Can only make a move if the game is not over!");
 		throw new Error("Can only make a move if the game is not over!");
 	}
-	
 	// set up the board after move
 	var boardAfterMove = angular.copy(board);
 	var label = turnIndexBeforeMove.toString();
@@ -151,14 +142,12 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 		var col = placement[i][1];
 		boardAfterMove[row][col] = label;
 	}
-	
 	var freeShapesAfterMove = updateFreeShapes(turnIndexBeforeMove, freeShapes,
 			shape);
 	var playerStatusAfterMove = updatePlayerStatus(boardAfterMove,
 			freeShapesAfterMove, playerStatus);
 	var firstOperation = updateTurnIndex(turnIndexBeforeMove,
 			playerStatusAfterMove, freeShapesAfterMove);
-	console.log("gameLogic.createMove success!");
 	return [ firstOperation, {
 		set : {
 			key : 'board',
@@ -186,26 +175,21 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 }
 
 function isMoveOk(params) {
-	console.log("calling isMoveOk");
-	console.log(params);
 	var move = params.move;
 	var stateBeforeMove = params.stateBeforeMove;
 	var turnIndexBeforeMove = params.turnIndexBeforeMove;
 	try {
 		var shape = move[4].set.value.shape;
 		var placement = move[4].set.value.placement;
-		console.log(stateBeforeMove);
 		var expectedMove = createMove(stateBeforeMove, placement, shape,
 				turnIndexBeforeMove);
 		if (!angular.equals(move, expectedMove)) {
-			console.log("gameLogic.isMoveOk === false");
 			return false;
 		}
 	} catch (e) {
 		// if there are any exceptions then the move is illegal
 		return false;
 	}
-	console.log("isMoveOk === true");
 	return true;
 }
 
@@ -260,11 +244,17 @@ function getTotalRotateCount(shape) {
 /** return the updated state.playerStatus after a move is completed */
 function updatePlayerStatus(boardAfterMove, freeShapes, playerStatus) {
 	var playerStatusAfterMove = angular.copy(playerStatus);
-	// check if the alive players is able to make a legal move,
-	// if not then the player is dead
+	// a player dies when used up all the shapes
 	for (var i = 0; i < 4; i++) {
-		// if the player is already dead, skip it.
-		if (!playerStatus[i]) {
+		if (shapeUsedUp(i, freeShapes)) {
+			console.log("player " + i + "used up shapes");
+			playerStatusAfterMove[i] = false;
+		}
+	}
+	// a player dies when the player cannot make a legal move using the remaining shapes
+	for (var i = 0; i < 4; i++) {
+		// skip dead player
+		if (!playerStatusAfterMove[i]) {
 			continue;
 		}
 		playerStatusAfterMove[i] = canMove(boardAfterMove, freeShapes, i);
@@ -272,13 +262,22 @@ function updatePlayerStatus(boardAfterMove, freeShapes, playerStatus) {
 	return playerStatusAfterMove;
 }
 
+/** return true if player i used up all the shapes*/
+function shapeUsedUp(turnIndex, freeShapes) {
+	for (var shape = 0; shape < 21; shape++) {
+		if (freeShapes[turnIndex][shape]) {
+			return false;
+		}
+	}
+	return true;
+}
 /** update updateTurnIndex after a move is completed */
 function updateTurnIndex(turnIndexBeforeMove, playerStatusAfterMove, freeShapes) {
 	var firstOperation = {};
 	if (endOfMatch(playerStatusAfterMove)) {
 		firstOperation = {
 			endMatch : {
-				endMatchScore : getScore(freeShapes)
+				endMatchScores : getScore(freeShapes)
 			}
 		};
 	} else {
@@ -475,8 +474,6 @@ function legalPlacement(board, placement, turnIndex) {
 	}
 }
 
-/** implement later */
-
 function getPlacement(row, col, shape, r) {
 
 	var placement = [];
@@ -491,16 +488,7 @@ function getPlacement(row, col, shape, r) {
 		if (r === 1) {
 			placement.push([ row, col ], [ row, col + 1 ]);
 		}
-		/*
-		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ]);
-		}
-		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ]);
-		}
-		*/
 		break;
-
 	case 2:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ]);
@@ -508,16 +496,7 @@ function getPlacement(row, col, shape, r) {
 		if (r === 1) {
 			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ]);
 		}
-		/*
-		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ]);
-		}
-		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ]);
-		}
-		*/
 		break;
-
 	case 3:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
@@ -527,18 +506,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
 					row, col + 3 ]);
 		}
-		/*
-		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
-					row + 3, col ]);
-		}
-		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
-					row, col - 3 ]);
-		}
-		*/
 		break;
-
 	case 4:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
@@ -548,18 +516,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
 					row, col + 3 ], [ row, col + 4 ]);
 		}
-		/*
-		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
-					row + 3, col ], [ row + 4, col ]);
-		}
-		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
-					row, col - 3 ], [ row, col - 4 ]);
-		}
-		*/
 		break;
-
 	case 5:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ]);
@@ -574,7 +531,6 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col - 1 ], [ row - 1, col ]);
 		}
 		break;
-
 	case 6:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
@@ -618,16 +574,6 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row, col + 1 ],
 					[ row + 1, col + 1 ], [ row - 1, col ]);
 		}
-		/*
-		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col - 1 ], [ row, col + 1 ]);
-		}
-		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row - 1, col - 1 ], [ row + 1, col ]);
-		}
-		*/
 		if (r === 4) {
 			placement.push([ row, col ], [ row - 1, col ],
 					[ row - 1, col - 1 ], [ row, col + 1 ]);
@@ -773,7 +719,6 @@ function getPlacement(row, col, shape, r) {
 					[ row + 1, col - 1 ]);
 		}
 		break;
-
 	case 14:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
@@ -792,7 +737,6 @@ function getPlacement(row, col, shape, r) {
 					row + 1, col ]);
 		}
 		break;
-
 	case 15:
 		if (r === 0) {
 			placement.push([ row, col ], [ row, col + 1 ],
@@ -827,7 +771,6 @@ function getPlacement(row, col, shape, r) {
 					[ row, col + 2 ], [ row + 1, col], [ row + 1, col + 1]);
 		}
 		break;
-
 	case 16:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ],
@@ -850,7 +793,6 @@ function getPlacement(row, col, shape, r) {
 					[ row + 1, col + 1 ]);
 		}
 		break;
-
 	case 17:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ],
@@ -873,7 +815,6 @@ function getPlacement(row, col, shape, r) {
 					[ row - 1, col + 1 ]);
 		}
 		break;
-
 	case 18:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ],
@@ -909,14 +850,12 @@ function getPlacement(row, col, shape, r) {
 
 		}
 		break;
-
 	case 19:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
 					row + 1, col ], [ row, col - 1 ]);
 		}
 		break;
-
 	case 20:
 		if (r === 0) {
 			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
@@ -954,9 +893,9 @@ function getPlacement(row, col, shape, r) {
 	}
 	return placement;
 }
-
   return {
       getScore: getScore,
+	  endOfMatch: endOfMatch,
       getInitialBoard: getInitialBoard,
 	  getInitialFreeShapes: getInitialFreeShapes,
 	  getInitialPlayerStatus: getInitialPlayerStatus,

@@ -13,7 +13,7 @@ angular.module('myApp')
 	
 	// Before getting any updateUI, we initialize $scope variables (such as board)
     // and show an empty board to a viewer (so you can't perform moves).
-    updateUI({stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2});
+    // updateUI({stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2}); this is a fake call;
 	gameService.setGame({
 		gameDeveloperEmail: "yw1840@nyu.edu",
 		minNumberOfPlayers: 4,
@@ -201,33 +201,7 @@ angular.module('myApp')
 			}
 		}
 	}
-	
-	
-	/** get the color of a square on the rotate area
-	$scope.getRotateAreaSquareColor = function(row, col) {
-		if ($scope.getRotate(row, col) === -1) { // if this square is not a part of a rotated shape
-			return { backgroundColor : 'white' };
-		} else { // get the correct color for that rotated shape
-			switch ($scope.turnIndex) {
-				case 0:
-					return { backgroundColor : 'red' };
-					break;
-				case 1:
-					return { backgroundColor : 'green' };
-					break;
-				case 2:
-					return { backgroundColor : 'blue' };
-					break;
-				case 3:
-					return { backgroundColor : 'yellow' };
-					break;
-				default:
-					return { backgroundColor: 'white'};
-					break;
-          }
-		}
-	}
-	*/
+
 	$scope.getRotate = function(row, col) {
 		var rotate = -1; // -1 denotes that the square does not belong to any rotated shape
 		if ($scope.shape === 0) {
@@ -594,7 +568,6 @@ angular.module('myApp')
 
 			var placement = gameLogic.getPlacement(row, col, $scope.shape, $scope.rotate);
 			var move = gameLogic.createMove($scope.state, placement, $scope.shape, $scope.turnIndex);
-			console.log('create move success!');
 			$scope.isYourTurn = false; // to prevent making another move
 			$scope.shape = -1; // to reset the shape being selected
 			/**need to reset $scope.rotate also*/
@@ -607,9 +580,8 @@ angular.module('myApp')
 
     $scope.shapAreaCellClicked = function (row, col) {
       // row = row - 1;
-      $log.info(["Clicked on shape:", row, col]);
       var shapeNum = getShape(row, col);
-      $log.info(shapeNum);
+	  $log.info(["Clicked on shape:", shapeNum]);
       $scope.shape = shapeNum;
     };
 	$scope.rotateClicked = function (row, col) {
@@ -625,21 +597,23 @@ angular.module('myApp')
 		console.log($scope.rotate);
 	}
 	$scope.setCol= function(row, col) {
-      if(getShape(row, col) >= 0 && shapeAvaiable(row, col, $scope.turnIndex)) {
-        switch ($scope.turnIndex) {
-          case 0:
-            return { backgroundColor : 'red' };
-            break;
-          case 1:
-            return { backgroundColor : 'green' };
-            break;
-          case 2:
-            return { backgroundColor : 'blue' };
-            break;
-          case 3:
-            return { backgroundColor : 'yellow' };
-            break;
-          }
+      /*if(getShape(row, col) >= 0 && shapeAvaiable(row, col, $scope.turnIndex)) {*/
+		var shapeNum = getShape(row, col);
+		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.turnIndex] != undefined && $scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
+			switch ($scope.turnIndex) {
+				case 0:
+					return { backgroundColor : 'red' };
+					break;
+				case 1:
+					return { backgroundColor : 'green' };
+					break;
+				case 2:
+					return { backgroundColor : 'blue' };
+					break;
+				case 3:
+					return { backgroundColor : 'yellow' };
+					break;
+			}
       } else {
         return { backgroundColor : 'white' };
       }
@@ -710,12 +684,11 @@ function getShape(row, col) {
       }
       return -1;
     };
-
+	/*
     function shapeAvaiable(row, col) {
-      var shapeNum = getShape(row, col);
-      var freeShapes = $scope.state.freeShapes;
-      //freeShapes[1][3] = false;
-      //console.log(freeShapes);
-      return freeShapes[$scope.turnIndex][shapeNum];
+		var shapeNum = getShape(row, col);
+		var freeShapes = $scope.state.freeShapes;
+		return freeShapes[$scope.turnIndex][shapeNum];
     }
+	*/
   }]);
