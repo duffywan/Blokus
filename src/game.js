@@ -524,7 +524,7 @@ angular.module('myApp')
 	
 	$scope.rotateAreaCellClicked = function(row, col) {
 		var rotate = $scope.getRotate(row,col);
-		if (rotate >= 0 && rotate < gameLogic.getTotalRotateCount($scope.shape)) {
+		if (rotate >= 0) {
 			$scope.rotate = rotate; // if the player clicks on a legal rotation, store the rotation in $scope.rotate
 		} else {
 			$scope.rotate = 0; // else default rotation to 0;
