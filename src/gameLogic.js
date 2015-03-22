@@ -103,7 +103,7 @@ function isValidRotation(shape, r) {
 	if (shape === 1 || shape === 2 || shape === 3 || shape === 4) {
 		return r === 0 || r === 1;
 	}
-	if (shape === 5 || shape === 10 || shape === 11 || shape === 14 || shaper === 16 || shape === 17) {
+	if (shape === 5 || shape === 10 || shape === 11 || shape === 14 || shape === 16 || shape === 17) {
 		return r === 0 || r === 1 || r === 2 || r === 3;
 	}
 	if (shape === 7 || shape === 13) {
