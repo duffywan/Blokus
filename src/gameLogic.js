@@ -71,21 +71,28 @@ function getPossibleMoves(state, turnIndex) {
 	var board = state.board;
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[0].length; j++) {
-			if (board[i][j] === '') {
-				for (var shape = 0; shape < freeShapes[turnIndex].length; shape++) {
-					if (!freeShapes[turnIndex][shape]) {
+			if (board[i][j] !== '') {
+				continue;
+			}
+			if (squareEdgeConnected(board, i, j, turnIndex)) {
+				continue;
+			}
+			if (!isFirstMove && !squareCornerConnected(board, i, j, turnIndex)) {
+				continue;
+			}
+			for (var shape = 0; shape < freeShapes[turnIndex].length; shape++) {
+				if (!freeShapes[turnIndex][shape]) {
+					continue;
+				}
+				for (var r = 0; r < 8; r++) {
+					// there are total 8 possible rotations
+					if (!isValidRotation(shape, r)) {
 						continue;
 					}
-					for (var r = 0; r < 8; r++) {
-						// there are total 8 possible rotations
-						if (!isValidRotation(shape, r)) {
-							continue;
-						}
-						var placement = getPlacement(i, j, shape, r);
-						if (legalPlacement(board, placement, turnIndex)) {
-							possibleMoves.push(createMove(state, placement,
-									shape, turnIndex));
-						}
+					var placement = getPlacement(i, j, shape, r);
+					if (legalPlacement(board, placement, turnIndex)) {
+						possibleMoves.push(createMove(state, placement,
+								shape, turnIndex));
 					}
 				}
 			}
@@ -206,6 +213,9 @@ function updateFreeShapes(turnIndexBeforeMove, freeShapes, shape) {
 
 /** check whether the current player can make a move using shape available */
 function canMove(board, freeShapes, turnIndex) {
+	if (isFirstMove(board, turnIndex)) {
+		return true;
+	}
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[0].length; j++) {
 			if (board[i][j] !== '') {
@@ -214,7 +224,7 @@ function canMove(board, freeShapes, turnIndex) {
 			if (squareEdgeConnected(board, i, j, turnIndex)) {
 				continue;
 			}
-			if (!isFirstMove && !squareCornerConnected(board, i, j, turnIndex)) {
+			if (!squareCornerConnected(board, i, j, turnIndex)) {
 				continue;
 			}
 			for (var shape = 0; shape < 21; shape++) {
@@ -235,8 +245,6 @@ function canMove(board, freeShapes, turnIndex) {
 	}
 	return false;
 }
-
-
 
 /** return the updated state.playerStatus after a move is completed */
 function updatePlayerStatus(boardAfterMove, freeShapes, playerStatus) {
