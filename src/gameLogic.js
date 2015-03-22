@@ -211,6 +211,12 @@ function canMove(board, freeShapes, turnIndex) {
 			if (board[i][j] !== '') {
 				continue;
 			}
+			if (squareEdgeConnected(board, i, j, turnIndex)) {
+				continue;
+			}
+			if (!isFirstMove && !squareCornerConnected(board, i, j, turnIndex)) {
+				continue;
+			}
 			for (var shape = 0; shape < 21; shape++) {
 				if (!freeShapes[turnIndex][shape]) {
 					continue;
@@ -335,35 +341,43 @@ function inBounds(board, row, col) {
 	return row >= 0 && row < board.length && col >= 0 && col < board[0].length;
 }
 
+
+/** check whether the board square has an edge connection to another square of the same player 03/22 */
+function squareCornerConnected(board, row, col, turnIndex) {
+	var label = turnIndex.toString();
+	if (inBounds(board, row + 1, col + 1) && board[row + 1][col + 1] === label || 
+		inBounds(board, row + 1, col - 1) && board[row + 1][col - 1] === label ||
+		inBounds(board, row - 1, col + 1) && board[row - 1][col + 1] === label || 
+		inBounds(board, row - 1, col - 1) && board[row - 1][col - 1] === label) {
+		return true;
+	} else {
+		return false;
+	}
+}
 /** check whether the placement is contains corner-to-corner connections */
 function cornerConnected(board, placement, turnIndex) {
 	for (var i = 0; i < placement.length; i++) {
 		var label = turnIndex.toString();
 		var row = placement[i][0];
 		var col = placement[i][1];
-		if (inBounds(board, row + 1, col + 1)) {
-			
-			if (board[row + 1][col + 1] === label) {
-				return true;
-			}
-		}
-		if (inBounds(board, row + 1, col - 1)) {
-			if (board[row + 1][col - 1] === label) {
-				return true;
-			}
-		}
-		if (inBounds(board, row - 1, col + 1)) {
-			if (board[row - 1][col + 1] === label) {
-				return true;
-			}
-		}
-		if (inBounds(board, row - 1, col - 1)) {
-			if (board[row - 1][col - 1] === label) {
-				return true;
-			}
+		if (squareCornerConnected(board, row, col, turnIndex)) {
+			return true;
 		}
 	}
 	return false;
+}
+
+/** check whether the board square has an edge connection to another square of the same player 03/22 */
+function squareEdgeConnected(board, row, col, turnIndex) {
+	var label = turnIndex.toString();
+	if (inBounds(board, row + 1, col) && board[row + 1][col] === label || 
+		inBounds(board, row - 1, col) && board[row - 1][col] === label ||
+		inBounds(board, row, col + 1) && board[row][col + 1] === label || 
+		inBounds(board, row, col - 1) && board[row][col - 1] === label) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /** check whether the placement contains edge-to-edge connections */
@@ -372,25 +386,8 @@ function edgeConnected(board, placement, turnIndex) {
 		var label = turnIndex.toString();
 		var row = placement[i][0];
 		var col = placement[i][1];
-		if (inBounds(board, row + 1, col)) {
-			if (board[row + 1][col] === label) {
-				return true;
-			}
-		}
-		if (inBounds(board, row - 1, col)) {
-			if (board[row - 1][col] === label) {
-				return true;
-			}
-		}
-		if (inBounds(board, row, col + 1)) {
-			if (board[row][col + 1] === label) {
-				return true;
-			}
-		}
-		if (inBounds(board, row, col - 1)) {
-			if (board[row][col - 1] === label) {
-				return true;
-			}
+		if (squareEdgeConnected(board, row, col, turnIndex)) {
+			return true;
 		}
 	}
 	return false;
@@ -422,15 +419,19 @@ function placementInBound(board, placement) {
 }
 
 function isFirstMove(board, turnIndex) {
-	var label = turnIndex.toString();
-	for (var i = 0; i < board.length; i++) {
-		for (var j = 0; j < board[0].length; j++) {
-			if (board[i][j] === label) {
-				return false;
-			}
-		}
+	if (turnIndex === 0) {
+		return board[0][0] !== '0';
 	}
-	return true;
+	if (turnIndex === 1) {
+		return board[0][19] !== '1';
+	}
+	if (turnIndex === 2) {
+		return board[19][0] !== '2';
+	}
+	if (turnIndex === 3) {
+		return board[19][19] !== '3';
+	}
+	return false;
 }
 
 function legalPlacement(board, placement, turnIndex) {
