@@ -584,18 +584,7 @@ angular.module('myApp')
 	  $log.info(["Clicked on shape:", shapeNum]);
       $scope.shape = shapeNum;
     };
-	$scope.rotateClicked = function (row, col) {
-		console.log($scope.shape);
-		if ($scope.shape === -1) {
-			return; // if the player haven't selected a shape, he/she cannot rotate a shape.
-		}
-		var rotate = row * 2 + col;
-		if (rotate >= gameLogic.getTotalRotateCount($scope.shape)) {
-			rotate = 0; // if the current shape does not have enough rotations, return the default rotation.
-		}
-		$scope.rotate = rotate;
-		console.log($scope.rotate);
-	}
+
 	$scope.setCol= function(row, col) {
       /*if(getShape(row, col) >= 0 && shapeAvaiable(row, col, $scope.turnIndex)) {*/
 		var shapeNum = getShape(row, col);

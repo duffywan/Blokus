@@ -215,9 +215,10 @@ function canMove(board, freeShapes, turnIndex) {
 				if (!freeShapes[turnIndex][shape]) {
 					continue;
 				}
-				var totalRotateCounts = getTotalRotateCount(shape);
-				for (var r = 0; r < totalRotateCounts; r++) {
-					// rotate the shape
+				for (var r = 0; r < 8; r++) {
+					if (!isValidRotation(shape, r)) {
+						continue;
+					}
 					var placement = getPlacement(i, j, shape, r);
 					if (legalPlacement(board, placement, turnIndex)) {
 						return true;
@@ -229,17 +230,7 @@ function canMove(board, freeShapes, turnIndex) {
 	return false;
 }
 
-function getTotalRotateCount(shape) {
-	if (shape === 1 || shape === 2 || shape === 3 || shape === 4 || shape === 5
-			|| shape === 8 || shape === 10 || shape === 11 || shape === 14
-			|| shape === 16 || shape === 17 || shape === 19) {
-		return 4;
-	} else if (shape === 0) {
-		return 1;
-	} else {
-		return 8;
-	}
-}
+
 
 /** return the updated state.playerStatus after a move is completed */
 function updatePlayerStatus(boardAfterMove, freeShapes, playerStatus) {
@@ -903,7 +894,6 @@ function getPlacement(row, col, shape, r) {
       isMoveOk: isMoveOk,
       legalPlacement: legalPlacement,
 	  getPlacement: getPlacement,
-      getPossibleMoves: getPossibleMoves,
-	  getTotalRotateCount: getTotalRotateCount
+      getPossibleMoves: getPossibleMoves
   };
 });
