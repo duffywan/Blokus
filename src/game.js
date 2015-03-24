@@ -1,15 +1,15 @@
 angular.module('myApp')
   .controller('Ctrl',
       ['$scope', '$log', '$timeout',
-       'gameService', 'stateService', 'gameLogic', 'aiService', 'resizeGameAreaService',
+       'gameService', 'stateService', 'gameLogic', 'resizeGameAreaService',
 		function ($scope, $log, $timeout,
-			gameService, stateService, gameLogic, aiService, resizeGameAreaService) {
+			gameService, stateService, gameLogic, resizeGameAreaService) {
 
     'use strict';
 
     resizeGameAreaService.setWidthToHeight(1.6);
 	
-	//window.e2e_test_stateService = stateService; //to allow us to load any state in our e2e tests.
+	window.e2e_test_stateService = stateService; //to allow us to load any state in our e2e tests.
 	
 	// Before getting any updateUI, we initialize $scope variables (such as board)
     // and show an empty board to a viewer (so you can't perform moves).
@@ -531,9 +531,14 @@ angular.module('myApp')
 		}
 		
 	}
+	/** get the color style of a cell on the boardArea by examining the board*/
+	$scope.getCellColorStyle = function (row, col) {
+		var color = $scope.getCellColor(row, col);
+		return {backgroundColor: color};
+	}
 	
-	/** get the color of a square on the board by examining the board*/
-	$scope.getSquareColor = function (row, col) {
+	/** get the color of a cell on the boardArea by examining the board*/
+	$scope.getCellColor = function (row, col) {
 		var cell = $scope.state.board[row][col];
 		var color = '';
 		if (cell === '0') {
@@ -547,8 +552,9 @@ angular.module('myApp')
 		} else {
 			color = 'white';
 		}
-		return {backgroundColor: color};
+		return color;
 	}	
+	
 	$scope.shapeClicked = function (shape) {
 		$scope.shape = shape;
 	}
@@ -585,7 +591,7 @@ angular.module('myApp')
       $scope.shape = shapeNum;
     };
 
-	$scope.setCol= function(row, col) {
+	$scope.getShapeCellColorStyle= function(row, col) {
       /*if(getShape(row, col) >= 0 && shapeAvaiable(row, col, $scope.turnIndex)) {*/
 		var shapeNum = getShape(row, col);
 		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.turnIndex] != undefined && $scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
@@ -673,11 +679,5 @@ function getShape(row, col) {
       }
       return -1;
     };
-	/*
-    function shapeAvaiable(row, col) {
-		var shapeNum = getShape(row, col);
-		var freeShapes = $scope.state.freeShapes;
-		return freeShapes[$scope.turnIndex][shapeNum];
-    }
-	*/
+	
   }]);

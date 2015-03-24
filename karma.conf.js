@@ -1,4 +1,7 @@
-module.exports = function(config){
+module.exports = function(config) {
+
+  'use strict';
+
   config.set({
 
     basePath : './',
@@ -6,11 +9,8 @@ module.exports = function(config){
     files : [
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js',
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-mocks.js',
-      'gameLogic.js',
-      'gameLogic_test.js',
-      'http://yoav-zibin.github.io/emulator/alphaBetaService.js',
-      'aiService.js',
-      'aiService_test.js'
+      'src/gameLogic.js',
+      'src/gameLogic_test.js'
     ],
 
     reporters: ['progress', 'coverage'],
@@ -19,7 +19,7 @@ module.exports = function(config){
       // source files, that you wanna generate coverage for
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
-      'gameLogic.js': ['coverage']
+      'src/gameLogic.js': ['coverage']
     },
 
     // optionally, configure the reporter
@@ -39,6 +39,6 @@ module.exports = function(config){
             'karma-jasmine',
             'karma-coverage'
             ]
-
+ 
   });
 };

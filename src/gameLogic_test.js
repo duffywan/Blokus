@@ -6,6 +6,7 @@ describe("Blokus", function() {
   beforeEach(inject(function (gameLogic) {
     _gameLogic = gameLogic;
   }));
+  
   it("get initial board", function () {
 	 var expectedBoard = [['','','','','','','','','','','','','','','','','','','',''],
 	                      ['','','','','','','','','','','','','','','','','','','',''],
@@ -30,7 +31,7 @@ describe("Blokus", function() {
 	 var generatedBoard = _gameLogic.getInitialBoard();
 	 expect(angular.equals(expectedBoard, generatedBoard)).toBe(true);
   });
-  
+
   it ("an example of a legal placement", function() {
 	 var board =  [['0','','','','','','','','','','','','','','','','','','','1'],
                    ['0','','','','','','','','','','','','','','','','','','',''],
@@ -57,6 +58,7 @@ describe("Blokus", function() {
 	 expect(_gameLogic.legalPlacement(board, placement, turnIndex)).toBe(true);
   });
   
+  
   it ("an example of an illegal placement", function() {
 		 var board =  [['0','','','','','','','','','','','','','','','','','','',''],
 	                   ['','','','','','','','','','','','','','','','','','','',''],
@@ -82,11 +84,8 @@ describe("Blokus", function() {
 		 var turnIndex = 0;
 		 expect(_gameLogic.legalPlacement(board, placement, turnIndex)).toBe(false);
 	  });
+
   it ("create a move when turnIndex is 1", function() {
-//	 example state = {board : [[...]...],
-//		 playerStatus : [true, true, true, true], freeShapes = [[true, true,
-//		 false...], [], [], []],
-//		 delta : {shape : 0, placement : [[2,2]]}
 	  var stateBeforeMove = {
 			  board : [['','','','','','','','','','','','','','','','','','','',''],
 	                   ['','','','','','','','','','','','','','','','','','','',''],
@@ -109,10 +108,10 @@ describe("Blokus", function() {
 	                   ['','','','','','','','','','','','','','','','','','','',''],
 	                   ['','','','','','','','','','','','','','','','','','','','']],
 	          playerStatus : [true, true, true, true],
-	          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true], 
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true],
-	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true, true, true, true, true, true]],
+	          freeShapes : [[true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true], 
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true],
+	                        [true, true, true, true, true,true, true, true, true, true,true, true, true, true, true,true, true, true, true, true, true]],
 	          delta : {}};
 	  var placement = [[0,0]];
 	  var shape = 0;
@@ -147,6 +146,7 @@ describe("Blokus", function() {
 	  var generatedMove = _gameLogic.createMove(stateBeforeMove, placement, shape, turnIndex);
 	  expect(angular.equals(expectedMove, generatedMove)).toBe(true);
   });
+  
   it ("example of isMove ok to be true", function(){
 	  var stateBeforeMove = {
 			  board : [['','','','','','','','','','','','','','','','','','','',''],
@@ -298,7 +298,7 @@ describe("Blokus", function() {
 	  var placement = [[0,17]];
 	  var shape = 0;
 	  var turnIndex = 3;
-	  var expectedMove = [{endMatch : {endMatchScore : [90, 90, 90, 90]}},
+	  var expectedMove = [{endMatch : {endMatchScores : [90, 90, 90, 90]}},
 			  {set : {key : 'board', value : [['0','0','','0','1','','','0','0','0','1','1','1','','3','3','','3','1','1'],
 			           	                   ['0','','0','0','1','1','1','0','','1','0','0','0','0','','','3','','','1'],
 			        	                   ['1','','1','0','1','0','0','1','1','1','3','3','3','','2','3','3','3','1',''],
@@ -393,7 +393,7 @@ describe("Blokus", function() {
 	          delta : {shape : 0, placement : [[17, 19]]}};
 	  var turnIndex = 3;
 	  var generatedPossibleMoves = _gameLogic.getPossibleMoves(stateBeforeMove, turnIndex);
-	  var move0 = [{endMatch : {endMatchScore : [90, 90, 90, 90]}},
+	  var move0 = [{endMatch : {endMatchScores : [90, 90, 90, 90]}},
 				  {set : {key : 'board', value : [['0','0','','0','1','','','0','0','0','1','1','1','','3','3','','3','1','1'],
 				           	                   ['0','','0','0','1','1','1','0','','1','0','0','0','0','','','3','','','1'],
 				        	                   ['1','','1','0','1','0','0','1','1','1','3','3','3','','2','3','3','3','1',''],
@@ -420,7 +420,7 @@ describe("Blokus", function() {
 					        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
 					        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
 					  {set : {key : 'delta', value : {shape : 0, placement : [[0,17]]}}}];
-	  var move1 = [{endMatch : {endMatchScore : [90, 90, 90, 90]}},
+	  var move1 = [{endMatch : {endMatchScores : [90, 90, 90, 90]}},
 					  {set : {key : 'board', value : [['0','0','','0','1','','','0','0','0','1','1','1','','3','3','','','1','1'],
 					           	                   ['0','','0','0','1','1','1','0','','1','0','0','0','0','','','3','','3','1'],
 					        	                   ['1','','1','0','1','0','0','1','1','1','3','3','3','','2','3','3','3','1',''],
@@ -447,7 +447,7 @@ describe("Blokus", function() {
 						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
 						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
 						  {set : {key : 'delta', value : {shape : 0, placement : [[1,18]]}}}];
-	  var move2 = [{endMatch : {endMatchScore : [90, 90, 90, 90]}},
+	  var move2 = [{endMatch : {endMatchScores : [90, 90, 90, 90]}},
 				  {set : {key : 'board', value : [['0','0','','0','1','','','0','0','0','1','1','1','','3','3','','','1','1'],
 				           	                   ['0','','0','0','1','1','1','0','','1','0','0','0','0','','','3','','','1'],
 				        	                   ['1','','1','0','1','0','0','1','1','1','3','3','3','','2','3','3','3','1',''],
@@ -474,7 +474,7 @@ describe("Blokus", function() {
 						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
 						        	                        [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]]}},
 					  {set : {key : 'delta', value : {shape : 0, placement : [[4,1]]}}}];
-	  var move3 = [{endMatch : {endMatchScore : [90, 90, 90, 90]}},
+	  var move3 = [{endMatch : {endMatchScores : [90, 90, 90, 90]}},
 				  {set : {key : 'board', value : [['0','0','','0','1','','','0','0','0','1','1','1','','3','3','','','1','1'],
 				           	                   ['0','','0','0','1','1','1','0','','1','0','0','0','0','','','3','','','1'],
 				        	                   ['1','','1','0','1','0','0','1','1','1','3','3','3','','2','3','3','3','1',''],
@@ -504,4 +504,5 @@ describe("Blokus", function() {
 	  var expectedPossibleMoves = [move0, move1, move2, move3];
 	  expect(angular.equals(expectedPossibleMoves, generatedPossibleMoves)).toBe(true);
   });
+ 
 });
