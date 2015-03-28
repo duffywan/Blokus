@@ -27,19 +27,19 @@
 }
 
 .whitePiece{
-	opacity: 0.25;
-	background: radial-gradient(grey,white);
+	opacity: 0.2;
+	background-color: grey;
 }
 .redPiece{
-	background: radial-gradient(#FF3399, white);
+	background-color:#FF3399;
 }
 .greenPiece{
-	background: radial-gradient(#99FF33, white);
+	background-color: #99FF33;
 }
 .bluePiece{
-	background: radial-gradient(#33CCFF, white);
+	background-color: #33CCFF;
 }
 .yellowPiece{
-	background: radial-gradient(#FF6600, white);
+	background-color: #FF6600;
 }
 
