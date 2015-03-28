@@ -902,6 +902,7 @@ function getPlacement(row, col, shape, r) {
       isMoveOk: isMoveOk,
       legalPlacement: legalPlacement,
 	  getPlacement: getPlacement,
-      getPossibleMoves: getPossibleMoves
+      getPossibleMoves: getPossibleMoves,
+	  placementInBound: placementInBound
   };
 });
