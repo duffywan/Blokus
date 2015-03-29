@@ -7,29 +7,44 @@ angular.module('myApp')
 
     'use strict';
 		
-	/*for drag and drop*/
+	/*set background color of boardArea square when dragging */
 	function setSquareBackgroundColor(row, col, color) {
-		if (color === 'grey') {
-			document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = 'grey';
-		}else {
-			document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = color;
-		}
+		document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = color;
     }
-
+	/*set background color of boardArea when dragging*/
     function setBoardBackgroundColor() {
+		console.log("16");
 		var num = getRowColNum('board');
         for (var row = 0; row < num.rowsNum; row++) {
 			for (var col = 0; col < num.colsNum; col++) {
-				setSquareBackgroundColor(row, col, $scope.getCellColor(row, col));
+				setSquareBackgroundColor(row, col, getBoardSquareColor(row, col));
 			}
 		}
     }
+	/*set the style for boardArea square*/
+	$scope.setBoardAreaSquareStyle = function(row, col) {
+		var color = getBoardSquareColor(row, col);
+		return {background:color};
+	}
+	/*return the square color on the boardArea. Red, green, blue, yellow for player0, 1, 2, 3. Grey for empty board square*/
+	function getBoardSquareColor(row, col) {
+		if ($scope.state.board[row][col] === '0') {
+			return '#FF3399';
+		} else if ($scope.state.board[row][col] === '1') {
+			return  '#99FF33';
+		} else if ($scope.state.board[row][col] === '2') {
+			return '#33CCFF';
+		} else if ($scope.state.board[row][col] === '3') {
+			return '#FF6600';
+		} else {
+			return '#E8E8E8';
+		}
+	}
 	function getTurnColor() {
 		var color = ['#FF3399', '#99FF33', '#33CCFF', '#FF6600'];
 		return color[$scope.turnIndex];
 	}
     function setPlacementBackgroundColor(row, col, placement) {
-		console.log("27");
         for (var i = 0; i < placement.length; i++) {
 			var row = placement[i][0];
 			var col = placement[i][1];
@@ -38,6 +53,7 @@ angular.module('myApp')
     }
 	function clearDrag(dragType) {
 		if (dragType === 'board') {
+			// reset boardArea background color;
 			setBoardBackgroundColor();
 		}
 		var draggingLines = document.getElementById(dragType+"DraggingLines");
@@ -65,8 +81,14 @@ angular.module('myApp')
 	}
 	
 	function handleDragEvent(type, clientX, clientY) {
-		var gameArea = document.getElementById("gameArea");
+		if (gameLogic.endOfMatch($scope.state.playerStatus)) {
+			return;
+		}
+		clearDrag('board');
+		clearDrag('shape');
+		clearDrag('rotate');
 		
+		var gameArea = document.getElementById("gameArea");
 		// compute horizontal and vertical offset relative to boardArea, shapeArea, and rotateArea
 		var boardX = clientX - document.getElementById("gameArea").offsetLeft;
         var boardY = clientY - document.getElementById("gameArea").offsetTop;
@@ -98,7 +120,6 @@ angular.module('myApp')
 		if (dragType === '') {
 			return;
 		}
-		clearDrag(dragType);
 		
 		// Inside gameArea. Let's find the containing square's row and col
 		var num = getRowColNum(dragType);
@@ -106,12 +127,9 @@ angular.module('myApp')
 		var col = Math.floor(num.colsNum * x / areaSize.width);
 		var row = Math.floor(num.rowsNum * y / areaSize.height);
 		console.log(row+","+col);
-		/*TEST*/
-		var cellSize = getSquareWidthHeight(dragType);
-		console.log("cellSize");
-		console.log(cellSize);
+	
 		if (dragType === 'board') {
-			// ignore the drag if the player didn't choose a shape first 
+			// ignore the drag if the player didn't choose a shape; 
 			if ($scope.shape === -1) {
 				return;
 			}
@@ -122,13 +140,17 @@ angular.module('myApp')
 			}
 			setPlacementBackgroundColor(row, col, placement);
 		}
+		if (dragType === 'rotate') {
+			if ($scope.shape === -1) {
+				return;
+			}
+		}
 		// displaying the dragging lines 
 		var draggingLines = document.getElementById(dragType + "DraggingLines");
 		var horizontalDraggingLine = document.getElementById(dragType + "HorizontalDraggingLine");
 		var verticalDraggingLine = document.getElementById(dragType + "VerticalDraggingLine");
 		draggingLines.style.display = "inline";
 		var centerXY = getSquareCenterXY(row, col, dragType);
-		console.log(centerXY);
 		verticalDraggingLine.setAttribute("x1", centerXY.x);
 		verticalDraggingLine.setAttribute("x2", centerXY.x);
 		horizontalDraggingLine.setAttribute("y1", centerXY.y);
@@ -138,6 +160,7 @@ angular.module('myApp')
 		if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
 			// drag ended
 			dragDone(row, col, dragType);
+			clearDrag(dragType);
         }
 	}
 	function getRowColNum(type) {
@@ -185,11 +208,7 @@ angular.module('myApp')
 			if (dragType === 'rotate') {
 				$scope.rotateAreaCellClicked(row, col);
 			}
-			var msg = "Dragged to " + row + "x" + col;
-			$log.info(msg);
-			$scope.msg = msg;
         });
-		clearDrag(dragType);
     }
 	
 	window.e2e_test_stateService = stateService; //to allow us to load any state in our e2e tests.
@@ -204,24 +223,6 @@ angular.module('myApp')
 		isMoveOk: gameLogic.isMoveOk,
 		updateUI: updateUI
     });
-	
-	$scope.isRedPiece = function(row, col) {
-		return $scope.state.board[row][col] === '0';
-	}
-	$scope.isGreenPiece = function(row, col) {
-		return $scope.state.board[row][col] === '1';
-	}
-	$scope.isBluePiece = function(row, col) {
-		return $scope.state.board[row][col] === '2';
-	}
-	$scope.isYellowPiece = function(row, col) {
-		return $scope.state.board[row][col] === '3';
-	}
-	$scope.isWhitePiece = function(row, col) {
-		return $scope.state.board[row][col] === '';
-	}
-	
-	
 
 	function updateUI(params) {
 		/*
@@ -251,7 +252,6 @@ angular.module('myApp')
 			// Waiting 0.5 seconds to let the move animation finish; if we call aiService
 			// then the animation is paused until the javascript finishes.
 			$timeout(sendComputerMove, 500);
-			setBoardBackgroundColor();
 		}
     }
 	function sendComputerMove() {
@@ -261,7 +261,7 @@ angular.module('myApp')
     }
 	$scope.getRotateAreaSquareColor = function(row, col) {
 		if ($scope.getRotate(row, col) === -1) { // if this square is not a part of a rotated shape
-			return {opacity: '0.2',background: 'grey'};
+			return {background: '#E8E8E8'};
 		}
 		var color = getTurnColor();
 		return {background: color};
@@ -596,31 +596,7 @@ angular.module('myApp')
 		}
 		
 	}
-	/** get the color style of a cell on the boardArea by examining the board
-	$scope.getBoardStyle = function (row, col) {
-		var color = $scope.getCellColor(row, col);
-		return {background: 'linear-gradient(to bottom right, white, red)'};
-	}
-	*/
-	
-	/** get the color of a cell on the boardArea by examining the board*/
-	$scope.getCellColor = function (row, col) {
-		var cell = $scope.state.board[row][col];
-		var color = '';
-		if (cell === '0') {
-			color = '#FF3399';
-		} else if (cell === '1') {
-			color = '#99FF33';
-		} else if (cell === '2') {
-			color = '#33CCFF';
-		} else if (cell === '3'){
-			color = '#FF6600';
-		} else {
-			color = 'grey';
-		}
-		return color;
-	}	
-	
+		
 	$scope.shapeClicked = function (shape) {
 		$scope.shape = shape;
 	}
@@ -651,8 +627,12 @@ angular.module('myApp')
     };
 
     $scope.shapAreaCellClicked = function (row, col) {
-      // row = row - 1;
-      var shapeNum = getShape(row, col);
+		// row = row - 1;
+		var shapeNum = getShape(row, col);
+		// ignore if the shape has been used
+		if (!$scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
+			return;
+		}
 	  $log.info(["Clicked on shape:", shapeNum]);
       $scope.shape = shapeNum;
     };
@@ -665,7 +645,7 @@ angular.module('myApp')
 			return {
 				background: color};
 		} else {
-			return {opacity: '0.2',background: 'grey'};
+			return {background: '#E8E8E8'};
 		}
     }
 function getShape(row, col) {

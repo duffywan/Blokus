@@ -26,20 +26,4 @@
 	border-right: 1pt solid white;
 }
 
-.whitePiece{
-	opacity: 0.2;
-	background-color: grey;
-}
-.redPiece{
-	background-color:#FF3399;
-}
-.greenPiece{
-	background-color: #99FF33;
-}
-.bluePiece{
-	background-color: #33CCFF;
-}
-.yellowPiece{
-	background-color: #FF6600;
-}
 
