@@ -27,7 +27,7 @@
   },
   "scripts": {
     "prestart": "npm install",
-    "start": "http-server -a localhost -p 9000 -c-1",
+    "start": "http-server -a localhost -p 51871 -c-1",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
     "pretest": "npm run update-webdriver",

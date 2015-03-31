@@ -35,7 +35,7 @@ module.exports = function(grunt) {
           browser: false, element: false, by: false, // Protractor
         },
       },
-      all: ['Gruntfile.js', 'karma.conf.js', 'protractor.conf.js', 'src/*.js', 'languages/*.js']
+      all: ['Gruntfile.js', 'karma.conf.js', 'protractor.conf.js', 'src/*.js']
     },
     karma: {
       unit: {
@@ -85,7 +85,7 @@ module.exports = function(grunt) {
             'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js',
             'http://yoav-zibin.github.io/emulator/dist/gameServices.min.js',
             'http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js',
-            'languages/en.js',
+			'http://yoav-zibin.github.io/emulator/examples/drag_n_drop/dragAndDropListeners.js',
             'http://yoav-zibin.github.io/emulator/main.css',
             'dist/everything.min.js',
             'game.css'
@@ -101,7 +101,7 @@ module.exports = function(grunt) {
         'dev': {
             // the server root directory
             root: '.',
-            port: 9000,
+            port: 51871,
             host: "0.0.0.0",
             cache: 1,
             showDir : true,

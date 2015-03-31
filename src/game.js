@@ -80,6 +80,21 @@ angular.module('myApp')
 		return {width: width,height: height};
 	}
 	
+	/*return true if the board square row X col is newly added, used for animation*/
+	$scope.newlyPlaced = function(row, col) {
+		/*for the initial state, there is no newly added square*/
+		if ($scope.state.delta === undefined) {
+			return false;
+		}
+		var lastPlacement = $scope.state.delta.placement;
+		for (var i = 0; i < lastPlacement.length; i++) {
+			if (lastPlacement[i][0] === row && lastPlacement[i][1] === col) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	function handleDragEvent(type, clientX, clientY) {
 		if (gameLogic.endOfMatch($scope.state.playerStatus)) {
 			return;
@@ -135,9 +150,10 @@ angular.module('myApp')
 			}
 			// Is the entire placement inside the board?
 			var placement = gameLogic.getPlacement(row, col, $scope.shape, $scope.rotate); /*find a way to get placement*/
-			if (!gameLogic.placementInBound($scope.state.board, placement)){
+			if (!gameLogic.placementInBound($scope.state.board, placement) || gameLogic.isOccupied($scope.state.board, placement)){
 				return;
 			}
+			
 			setPlacementBackgroundColor(row, col, placement);
 		}
 		if (dragType === 'rotate') {
@@ -229,10 +245,10 @@ angular.module('myApp')
 			example of params = {stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2}
 		*/
 		$scope.state = params.stateAfterMove;
-		$scope.state.board = params.stateAfterMove.board;
-		$scope.state.delta = params.stateAfterMove.delta;
-		$scope.state.freeShapes = params.stateAfterMove.freeShapes;
-		$scope.state.playerStatus = params.stateAfterMove.playerStatus;
+		//$scope.state.board = params.stateAfterMove.board;
+		//$scope.state.delta = params.stateAfterMove.delta;
+		//$scope.state.freeShapes = params.stateAfterMove.freeShapes;
+		//$scope.state.playerStatus = params.stateAfterMove.playerStatus;
 		$scope.shape = -1; //initialize the shape being selected by current player, DEV USE
 		$scope.rotate = 0; //initialize the rotate direction, DEV USE
 		
@@ -628,18 +644,18 @@ angular.module('myApp')
 
     $scope.shapAreaCellClicked = function (row, col) {
 		// row = row - 1;
-		var shapeNum = getShape(row, col);
+		var shapeNum = $scope.getShape(row, col);
 		// ignore if the shape has been used
 		if (!$scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
 			return;
 		}
 	  $log.info(["Clicked on shape:", shapeNum]);
+	  $scope.rotate = 0; //everytime clicked on a shape, reset the rotate variable to 0(default);
       $scope.shape = shapeNum;
     };
 	/*need to edit 03/26*/
 	$scope.getShapeCellColorStyle= function(row, col) {
-      /*if(getShape(row, col) >= 0 && shapeAvaiable(row, col, $scope.turnIndex)) {*/
-		var shapeNum = getShape(row, col);
+		var shapeNum = $scope.getShape(row, col);
 		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.turnIndex] != undefined && $scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
 			var color = getTurnColor();
 			return {
@@ -648,7 +664,7 @@ angular.module('myApp')
 			return {background: '#E8E8E8'};
 		}
     }
-function getShape(row, col) {
+	$scope.getShape = function(row, col) {
       if (row === 0 && col === 2) {
         return 0;
       }

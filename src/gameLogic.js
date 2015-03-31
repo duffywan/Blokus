@@ -903,6 +903,7 @@ function getPlacement(row, col, shape, r) {
       legalPlacement: legalPlacement,
 	  getPlacement: getPlacement,
       getPossibleMoves: getPossibleMoves,
+	  isOccupied:isOccupied,
 	  placementInBound: placementInBound
   };
 });
