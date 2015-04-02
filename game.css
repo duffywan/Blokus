@@ -1,26 +1,26 @@
 .r {
-  border-right: 1pt solid white;
+  border-right: 1pt double white;
 }
 .t {
-  border-top: 1pt solid white;
+  border-top: 1pt double white;
 }
 
 .l {
-  border-left: 1pt solid white;
+  border-left: 1pt double white;
 }
 
 .b {
-  border-bottom: 1pt solid white;
+  border-bottom: 1pt double white;
 }
 .white_t{
-	border-top: 1pt solid white;
+	border-top: 1pt double white;
 }
 
 .white_b{
-	border-bottom: 1pt solid white;
+	border-bottom: 1pt double white;
 }
 .white_l{
-	border-left: 1pt solid white;
+	border-left: 1pt double white;
 }
 .white_r{
 	border-right: 1pt solid white;
@@ -30,11 +30,11 @@
     animation-duration: 4s;
 }
 .blink {
-  animation: black-blink 2s infinite;
-  -webkit-animation: black-blink 2s infinite;
+  animation: black-blink 4s infinite;
+  -webkit-animation: black-blink 4s infinite;
 }
 .shadow{
-	box-shadow: 10px 10px 5px #888888;
+	box-shadow: 5% 5% 5% #888888;
 }
 .transition{
 	transition: background-color 2s;

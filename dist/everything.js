@@ -944,7 +944,7 @@ function getPlacement(row, col, shape, r) {
 		} else if ($scope.state.board[row][col] === '3') {
 			return '#FF9900';
 		} else {
-			return '#E8E8E8';
+			return '#F0F0F0';
 		}
 	}
 	function getTurnColor() {
@@ -1183,7 +1183,7 @@ function getPlacement(row, col, shape, r) {
     }
 	$scope.getRotateAreaSquareColor = function(row, col) {
 		if ($scope.getRotate(row, col) === -1) { // if this square is not a part of a rotated shape
-			return {background: '#E8E8E8'};
+			return {background: '#F0F0F0'};
 		}
 		var color = getTurnColor();
 		return {background: color};
@@ -1563,7 +1563,7 @@ function getPlacement(row, col, shape, r) {
 			return {
 				background: color};
 		} else {
-			return {background: '#E8E8E8'};
+			return {background: '#F0F0F0'};
 		}
     }
 	/*updated on 04/01/2015*/

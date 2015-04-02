@@ -65,18 +65,18 @@
 			ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
 			style="position:absolute; top:{{row * 3}}%; left:0; width:100%; height:3%;">
 			<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-				style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;border-radius:10%;"
+				style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
 				ng-class = "{l: true, t: true, r: col === 19, b: row === 19, blink:newlyPlaced(row, col)}"
 				ng-style = "setBoardAreaSquareStyle(row, col)"
 				id="{{'e2e_test_board_div_' + row + 'x' + col}}">
 			</div>
 		</div>			
-
+		<div 
 	    <div id = "{{'shapeAreaRow' + row}}" 
 			ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
 			style="position:absolute; top:{{63 + row * 3}}%; left: 0; width:100%; height:3%;">
 				<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-					style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;border-radius:10%;"
+					style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
 					ng-class = "{white_t: true, white_l: true, blink:shape>=0&&getShape(row, col)===shape}"
 					id="{{'e2e_test_shape_div_' + row + 'x' + col}}"
 					ng-show="shape===-1|| shape>=0 && rotate>=0"
@@ -88,7 +88,7 @@
 			ng-repeat = "row in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
 			style = "position:absolute;top:{{63 + row * 3}}%; left:0; width:100%; height:3%;">
 				<div ng-repeat = "col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-					style = "position:absolute;top:0;left:{{col*5}}%;width:5%; height:100%;border-radius:10%;"
+					style = "position:absolute;top:0;left:{{col*5}}%;width:5%; height:100%;"
 					ng-class = "{white_t: true, white_l: col>0, white_b: row===39, white_r: col===9,l:col===0,
 					blink:shape>=0&&rotate!=-1&&getRotate(row, col)===rotate}"
 					ng-style = "getRotateAreaSquareColor(row, col)"
