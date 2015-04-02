@@ -33,6 +33,9 @@
   animation: black-blink 2s infinite;
   -webkit-animation: black-blink 2s infinite;
 }
+.shadow{
+	box-shadow: 10px 10px 5px #888888;
+}
 .transition{
 	transition: background-color 2s;
 }

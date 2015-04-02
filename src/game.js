@@ -13,7 +13,6 @@ angular.module('myApp')
     }
 	/*set background color of boardArea when dragging*/
     function setBoardBackgroundColor() {
-		console.log("16");
 		var num = getRowColNum('board');
         for (var row = 0; row < num.rowsNum; row++) {
 			for (var col = 0; col < num.colsNum; col++) {
@@ -35,13 +34,13 @@ angular.module('myApp')
 		} else if ($scope.state.board[row][col] === '2') {
 			return '#33CCFF';
 		} else if ($scope.state.board[row][col] === '3') {
-			return '#FF6600';
+			return '#FF9900';
 		} else {
 			return '#E8E8E8';
 		}
 	}
 	function getTurnColor() {
-		var color = ['#FF3399', '#99FF33', '#33CCFF', '#FF6600'];
+		var color = ['#FF3399', '#99FF33', '#33CCFF', '#FF9900'];
 		return color[$scope.turnIndex];
 	}
     function setPlacementBackgroundColor(row, col, placement) {
@@ -66,16 +65,16 @@ angular.module('myApp')
 		var width = 0;
 		var height = 0;
 		if (type === 'board'){
-			width = document.getElementById("boardAreaRow").clientWidth;
-			height = document.getElementById("gameArea").clientHeight;
+			width = document.getElementById("boardAreaRow0").clientWidth;
+			height = document.getElementById("boardAreaRow0").clientHeight * 20;
 		}
 		if (type === 'shape'){
-			width = document.getElementById("shapeAreaRow").clientWidth;
-			height = document.getElementById("gameArea").clientHeight;
+			width = document.getElementById("shapeAreaRow0").clientWidth;
+			height = document.getElementById("shapeAreaRow0").clientHeight * 12;
 		}
 		if (type === 'rotate'){
-			width = document.getElementById("rotateAreaRow").clientWidth;
-			height = document.getElementById("gameArea").clientHeight;
+			width = document.getElementById("rotateAreaRow0").clientWidth;
+			height = document.getElementById("rotateAreaRow0").clientHeight * 9;
 		}		
 		return {width: width,height: height};
 	}
@@ -107,11 +106,10 @@ angular.module('myApp')
 		// compute horizontal and vertical offset relative to boardArea, shapeArea, and rotateArea
 		var boardX = clientX - document.getElementById("gameArea").offsetLeft;
         var boardY = clientY - document.getElementById("gameArea").offsetTop;
-		var shapeX = clientX - document.getElementById("shapeAreaRow").offsetLeft - document.getElementById("gameArea").offsetLeft;
-        var shapeY = clientY - document.getElementById("gameArea").offsetTop;
-		var rotateX = clientX - document.getElementById("rotateAreaRow").offsetLeft - document.getElementById("gameArea").offsetLeft;
-        var rotateY = clientY - document.getElementById("gameArea").offsetTop;
-		
+		var shapeX = clientX - document.getElementById("gameArea").offsetLeft;
+        var shapeY = clientY - document.getElementById("shapeAreaRow0").offsetTop;
+		var rotateX = clientX - document.getElementById("gameArea").offsetLeft;
+        var rotateY = clientY - document.getElementById("rotateAreaRow0").offsetTop;
 		var dragType = '';
 		// initialize dragType
 		var boardSize = getAreaSize('board');
@@ -122,30 +120,33 @@ angular.module('myApp')
 			x = boardX;
 			y = boardY;
 			dragType = 'board';
-        } else if (shapeX > 0 && shapeX < shapeSize.width && shapeY > 0 && shapeY < shapeSize.height){
+        } else if ($scope.shape>=0&&$scope.rotate===-1&&rotateX > 0 && rotateX < rotateSize.width && rotateY > 0 && rotateY < rotateSize.height){
+			x = rotateX;
+			y = rotateY
+			dragType = 'rotate';
+		} else if (($scope.shape===-1&&$scope.rotate===-1 || $scope.shape>=0&&$scope.rotate>=0)
+					&& shapeX < shapeSize.width && shapeY > 0 && shapeY < shapeSize.height){
 			x = shapeX;
 			y = shapeY;
 			dragType = 'shape';
-        } else if (rotateX > 0 && rotateX < rotateSize.width && rotateY > 0 && rotateY < rotateSize.height){
-			x = rotateX;
-			y = rotateY;
-			dragType = 'rotate';
 		} 
 		// ignore if none of the valid drag
 		if (dragType === '') {
 			return;
 		}
-		
+		console.log("dragType is  "+dragType);
 		// Inside gameArea. Let's find the containing square's row and col
 		var num = getRowColNum(dragType);
 		var areaSize = getAreaSize(dragType);
 		var col = Math.floor(num.colsNum * x / areaSize.width);
 		var row = Math.floor(num.rowsNum * y / areaSize.height);
-		console.log(row+","+col);
 	
 		if (dragType === 'board') {
 			// ignore the drag if the player didn't choose a shape; 
 			if ($scope.shape === -1) {
+				return;
+			}
+			if ($scope.rotate === -1) {
 				return;
 			}
 			// Is the entire placement inside the board?
@@ -156,11 +157,7 @@ angular.module('myApp')
 			
 			setPlacementBackgroundColor(row, col, placement);
 		}
-		if (dragType === 'rotate') {
-			if ($scope.shape === -1) {
-				return;
-			}
-		}
+
 		// displaying the dragging lines 
 		var draggingLines = document.getElementById(dragType + "DraggingLines");
 		var horizontalDraggingLine = document.getElementById(dragType + "HorizontalDraggingLine");
@@ -184,10 +181,10 @@ angular.module('myApp')
 			return {rowsNum: 20, colsNum: 20};
 		} 
 		if (type === 'shape') {
-			return {rowsNum: 40, colsNum: 10};
+			return {rowsNum: 12, colsNum: 20};
 		} 
 		if (type === 'rotate') {
-			return {rowsNum: 40, colsNum: 5};
+			return {rowsNum: 9, colsNum: 20};
 		} 
 	}
 	function getSquareWidthHeight(type) {
@@ -212,14 +209,14 @@ angular.module('myApp')
         };
     }
 
-    resizeGameAreaService.setWidthToHeight(1.6);
+    resizeGameAreaService.setWidthToHeight(0.6);
 	function dragDone(row, col, dragType) {
         $rootScope.$apply(function () {
 			if (dragType === 'board') {
 				$scope.boardAreaCellClicked(row, col);
 			}
 			if (dragType === 'shape') {
-				$scope.shapAreaCellClicked(row, col);
+				$scope.shapeAreaCellClicked(row, col);
 			}
 			if (dragType === 'rotate') {
 				$scope.rotateAreaCellClicked(row, col);
@@ -249,8 +246,9 @@ angular.module('myApp')
 		//$scope.state.delta = params.stateAfterMove.delta;
 		//$scope.state.freeShapes = params.stateAfterMove.freeShapes;
 		//$scope.state.playerStatus = params.stateAfterMove.playerStatus;
-		$scope.shape = -1; //initialize the shape being selected by current player, DEV USE
-		$scope.rotate = 0; //initialize the rotate direction, DEV USE
+		$scope.shape = -1; //initialize the shape being selected by current player
+		
+		$scope.rotate = -1; //initialize the rotate direction, DEV USE//03/31
 		
 
 		if ($scope.state.board === undefined) {
@@ -282,83 +280,84 @@ angular.module('myApp')
 		var color = getTurnColor();
 		return {background: color};
 	}
-
+	/*updated on 04/01/2015*/
+	/*return the rotation index for the selected shape*/
 	$scope.getRotate = function(row, col) {
-		var rotate = -1; // -1 denotes that the square does not belong to any rotated shape
+		var rotate = -1; // the square does not belong to any rotated shape
 		if ($scope.shape === 0) {
-			if (row === 2 && col === 2) {
+			if (row === 1 && col === 1) {
 				rotate = 0;
 			}
 		}
 		if ($scope.shape === 1) {
-			if (row===1 && col === 2 || row === 2 && col === 2) {
+			if (row===0 && col === 1 || row === 1 && col === 1) {
 				rotate = 0;
 			}
-			if (row===7 && col === 2 || row === 7 && col === 3) {
+			if (row===1 && col === 5 || row === 1 && col === 6) {
 				rotate = 1;
 			}
 		}
 		if ($scope.shape === 2) {
-			if (row === 0 && col === 2 || row === 1 && col === 2 || row === 2 && col === 2) {
+			if (row >= 0 && row <= 2 && col === 1) {
 				rotate = 0;
 			}
-			if (row === 7 && col ===1 || row === 7 && col === 2 || row === 7 && col === 3) {
+			if (col >= 5 && col <= 7 && row === 1) {
 				rotate = 1;
 			}
 		}
 		if ($scope.shape === 3) {
-			if (row === 0 && col === 2 || row === 1 && col === 2 || row === 2 && col === 2 || row === 3 && col === 2) {
+			if (row >= 0 && row <= 3 && col === 1) {
 				rotate = 0;
 			}
-			if (row === 7 && col ===1 || row === 7 && col === 2 || row === 7 && col === 3 || row === 7 && col === 4) {
+			if (col >= 5 && col <= 8 && row === 2) {
 				rotate = 1;
 			}
 		}
 		if ($scope.shape === 4) {
-			if (row === 0 && col === 2 || row === 1 && col === 2 || row === 2 && col === 2 || row === 3 && col === 2 || row === 4 && col === 2) {
+			if (row >= 0 && row <= 4 && col === 1) {
 				rotate = 0;
 			}
-			if (row === 7 && col === 0 || row === 7 && col ===1 || row === 7 && col === 2 || row === 7 && col === 3 || row === 7 && col === 4) {
+			if (col >= 5 && col <= 9 && row === 2) {
 				rotate = 1;
 			}
 		}
 		if ($scope.shape === 5) {
-			if (row===1 && col === 2 || row === 2 && col === 2 || row === 2 && col === 3) {
+			if (row===1 && col === 1 || row === 2 && col === 1 || row === 2 && col === 2) {
 				rotate = 0;
 			}
-			if (row===7 && col === 2 || row === 7 && col === 3 || row === 8 && col === 2) {
+			if (row===1 && col === 6 || row === 1 && col === 7 || row === 2 && col === 6) {
 				rotate = 1;
 			}
-			if (row===12&&col===1 || row===12&&col===2 || row===13&&col===2) {
+			if (row===1&&col===11 || row===1&&col===12 || row===2&&col===12) {
 				rotate = 2;
 			}
-			if (row===16&&col===2 || row===17&&col===1 || row===17&&col===2) {
+			if (row===2&&col===17 || row===2&&col===18 || row===1&&col===18) {
 				rotate = 3;
 			}
 		}
 		if ($scope.shape === 6) {
-			if(row===0&&col===2 || row===1&&col===2 || row===2&&col===2 || row===2&&col===3){
+			if(row >= 0 && row <= 2 && col === 1 || row === 2 && col === 2){
 				rotate = 0;
 			}
-			if(row===6&&col===2 || row===6&&col===3 || row===6&&col===4 || row===7&&col===2) {
+			if(col >= 6 && col <= 8 && row === 1 || row === 2 && col === 2) {
 				rotate = 1;
 			}
-			if(row===12&&col===2 || row===12&&col===3 || row===13&&col===3 || row===14&&col===3){
+			if(row >= 0 && row <= 2 && col === 12 || row === 0 && col === 11){
 				rotate = 2;
 			}
-			if(row===16&&col===2 || row===17&&col===0 || row===17&&col===1 || row===17&&col===2){
+			if(col >= 16 && col <= 18 && row === 2 || row === 1 && col === 18){
 				rotate = 3;
 			}
-			if (row===22&&col===1 || row===20&&col===2 || row===21&&col===2 || row===22&&col===2) {
+			if (row >= 4 && row <= 6 && col === 2 || row === 6 && col === 1) {
 				rotate = 4;
 			}
-			if (row===26&&col===2 || row===27&&col===2 || row===27&&col===3 || row===27&&col===4) {
+			if (col >= 6 && col <= 8 && row === 6 || row === 5 && col === 6) {
 				rotate = 5;
 			}
-			if (row===32&&col===3 || row===32&&col===2 || row===33&&col===2 || row===34&&col===2) {
+			if (row >= 4 && row <= 4 && col === 11 || row === 4 && col === 12) {
 				rotate = 6;
 			}
-			if(row===36&&col===1 || row===36&&col===2 || row===36&&col===3 || row===37&&col===3){
+			if(col >= 16 && col <= 18 && row === 5 || row === 6 && col === 18){
 				rotate = 7;
 			}
 		}
@@ -366,237 +365,237 @@ angular.module('myApp')
 			if(row===1&&col===2 || row===1&&col===3 || row===2&&col===1 || row===2&&col===2){
 				rotate = 0;
 			}
-			if(row===6&&col===1 || row===7&&col===1 || row===7&&col===2 || row===8&&col===2){
+			if(row===0&&col===6 || row===1&&col===6 || row===1&&col===7 || row===2&&col===7){
 				rotate = 1;
 			}
-			if(row===21&&col===1 || row===21&&col===2 || row===22&&col===2 || row===22&&col===3){
+			if(row===1&&col===11 || row===1&&col===12 || row===2&&col===12 || row===2&&col===13){
 				rotate = 4;
 			}
-			if(row===27&&col===2 || row===28&&col===2 || row===26&&col===3 || row===27&&col===3){
+			if(row===1&&col===17 || row===2&&col===17 || row===0&&col===18 || row===2&&col===18){
 				rotate = 5;
 			}
 		}
 		if ($scope.shape === 8) {
-			if(row===1&&col===2 || row===1&&col===3 || row===2&&col===2 || row===2&&col===3) {
+			if(row===0&&col===1 || row===0&&col===2 || row===1&&col===1 || row===1&&col===2) {
 				rotate = 0;
 			}
 		}
 		if ($scope.shape === 9) {
-			if(row===1&&col===1 || row===2&&col===1 || row===2&&col===2 || row===2&&col===3 || row===2&&col===4){
+			if(col>=0&&col<=3&&row===3 || row===2&&col===0){
 				rotate = 0;
 			}
-			if (row===6&&col===3 || row===6&&col===2 || row===7&&col===2 || row===8&&col===2 || row===9&&col===2){
+			if(row>=0&&row<=3&&col===6 || row===0&&col===7){
 				rotate = 1;
 			}
-			if(row===12&&col===0 || row===12&&col===1 || row===12&&col===2 || row===12&&col===3 || row===13&&col===3){
+			if(col>=10&&col<=13&&row===2 || row===3&&col===13){
 				rotate = 2;
 			}
-			if (row===15&&col===2 || row===16&&col===2 || row===17&&col===2 || row===18&&col===2 || row===18&&col===1) {
+			if (row>=0&&row<=3&&col===17 || row===3&&col===16) {
 				rotate = 3;
 			}
-			if (row===21&&col===3 || row===22&&col===0 || row===22&&col===1 || row===22&&col===2 || row===22&&col===3) {
+			if (col>=0&&col<=3&&row===8 || row===7&&col===3) {
 				rotate = 4;
 			}
-			if (row===25&&col===2 || row===26&&col===2 || row===27&&col===2 || row===28&&col===2 || row===28&&col===3) {
+			if (row>=5&&row<=8&&col===6 || row===8&&col===7) {
 				rotate = 5;
 			}
-			if (row===31&&col===1 || row===31&&col===2 || row===31&&col===3 || row===31&&col===4 || row===32&&col===1) {
+			if (col>=10&&col<=13&&row===7 || row===8&&col===10) {
 				rotate = 6;
 			}
-			if (row===36&&col===1 || row===36&&col===2 || row===37&&col===2 || row===38&&col===2 || row===39&&col===2) {
+			if (row>=5&&row<=8&&col===17 || row===5&&col===16) {
 				rotate = 7;
 			}
 		}
 		if ($scope.shape === 10) {
-			if(row===1&&col===2 || row===2&&col===2 || row===3&&col===1 || row===3&&col===2 || row===3&&col===3) {
+			if(row===2&&col===1 || row===2&&col===2 || row===2&&col===3 || row===0&&col===2 || row===1&&col===2) {
 				rotate = 0;
 			}
-			if(row===6&&col===1 || row===7&&col===1 || row===8&&col===1 || row===7&&col===2 || row===7&&col===3) {
+			if(row===0&&col===6 || row===1&&col===6 || row===2&&col===6 || row===1&&col===7 || row===1&&col===8) {
 				rotate = 1;
 			}
-			if (row===11&&col===1 || row===11&&col===2 || row===11&&col===3 || row===12&&col===2 || row===13&&col===2) {
+			if (row===0&&col===11 || row===0&&col===12 || row===0&&col===13 || row===1&&col===12 || row===2&&col===12) {
 				rotate = 2;
 			}
-			if(row===17&&col===1 || row===17&&col===2 || row===16&&col===3 || row===17&&col===3 || row===18&&col===3) {
+			if(row===1&&col===16 || row===1&&col===17 || row===1&&col===18 || row===0&&col===18 || row===2&&col===18) {
 				rotate = 3;
 			}
 		}
 		if($scope.shape === 11){
-			if(row===1&&col===1 || row===2&&col===1 || row===3&&col===1 || row===3&&col===2 || row===3&&col===3) {
+			if(row===0&&col===1 || row===1&&col===1 || row===2&&col===1 || row===2&&col===2 || row===2&&col===3) {
 				rotate = 0;
 			}
-			if(row===6&&col===1 || row===6&&col===2 || row===6&&col===3 || row===7&&col===1 || row===8&&col===1) {
+			if(row===0&&col===6 || row===0&&col===7 || row===0&&col===8 || row===1&&col===6 || row===2&&col===6) {
 				rotate = 1;
 			}
-			if(row===11&&col===1 || row===11&&col===2 || row===11&&col===3 || row===12&&col===3 || row===13&&col===3) {
+			if(row===0&&col===11 || row===0&&col===12 || row===0&&col===13 || row===1&&col===13 || row===2&&col===13) {
 				rotate = 2;
 			}
-			if(row===16&&col===3 || row===17&&col===3 || row===18&&col===1 || row===18&&col===2 || row===18&&col===3) {
+			if(row===2&&col===16 || row===2&&col===17 || row===2&&col===18 || row===0&&col===18 || row===1&&col===18) {
 				rotate = 3;
 			}
 		}
 		if($scope.shape === 12) {
-			if(row===1&&col===2 || row===1&&col===3 || row===1&&col===4 || row===2&&col===1 || row===2&&col==2) {
+			if(row===2&&col>=0&&col<=1 || row===1&&col>=1&&col<=3) {
 				rotate = 0;
 			}
-			if(row===6&&col===2 || row===7&&col===2 || row===7&&col===3 || row===8&&col===3 || row===9&&col===3) {
+			if(row>=0&&row<=1&&col===6 || row>=1&&row<=3&&col===7) {
 				rotate = 1;
 			}
-			if(row===12&&col===2 || row===12&&col===3 || row===13&&col===0 || row===13&&col===1 || row===13&&col===2) {
+			if(row===2&&col>=11&&col<=13 || row===1&&col>=13&&col<=14) {
 				rotate = 2;
 			}
-			if(row===15&&col===2 || row===16&&col===2 || row===17&&col===2 || row===17&&col===3 || row===18&&col===3) {
+			if(row>=0&&row<=2&&col===17 || row>=2&&row<=3&&col===18) {
 				rotate = 3;
 			}
-			if(row===21&&col===0 || row===21&&col===1 || row===21&&col===2 || row===22&&col===2 || row===22&&col===3) {
+			if(row===6&&col>=0&&col<=2 || row===7&&col>=2&&col<=3) {
 				rotate = 4;
 			}
-			if(row===25&&col===3 || row===26&&col===3 || row===27&&col===3 || row===27&&col===2 || row===28&&col===2) {
+			if(row>=7&&row<=8&&col===6 || row>=5&&row<=7&&col===7) {
 				rotate = 5;
 			}
-			if(row===31&&col===1 || row===31&&col===2 || row===32&&col===2 || row===32&&col===3 || row===32&&col===4) {
+			if(row===6&&col>=11&&col<=12 || row===7&&col>=12&&col<=14) {
 				rotate = 6;
 			}
-			if(row===36&&col===3 || row===37&&col===3 || row===37&&col===2 || row===38&&col===2 || row===39&&col==2) {
+			if(row>=6&&row<=8&&col===17 || row>=5&&row<=6&&col===18) {
 				rotate = 7;
 			}
 		}
 		if($scope.shape === 13) {
-			if(row===1&&col===3 || row===2&&col===1 || row===2&&col===2 || row===2&&col===3 || row===3&&col===1) {
+			if(row===1&&col>=1&&col<=3 || row===0&&col===3 || row===2&&col===1) {
 				rotate = 0;
 			} 
-			if(row===6&&col===1 || row===6&&col===2 || row===7&&col===2 || row===8&&col===2 || row===8&&col===3) {
+			if(row>=0&&row<=2&&col===7 || row===0&&col===6 || row===2&&col===8) {
 				rotate = 1;
 			}
-			if(row===21&&col===1 || row===22&&col===1 || row===22&&col===2 || row===22&&col===3 || row===23&&col===3) {
+			if(row===1&&col>=11&&col<=13 || row===0&&col===11|| row===2&&col===13) {
 				rotate = 4;
 			}
-			if(row===26&&col===2 || row===26&&col===3 || row===27&&col===2 || row===28&&col===1 || row===28&&col===2) {
+			if(row>=0&&row<=2&&col===17 || row===2&&col===16 || row===0&&col===18) {
 				rotate = 5;
 			}
 		}
 		if ($scope.shape === 14) {
-			if(row===1&&col===2 || row===2&&col===1 || row===2&&col===2 || row===2&&col===3) {
+			if(row===1&&col>=0&&col<=2 || row===0&&col===1) {
 				rotate = 0;
 			}
-			if(row===6&&col===2 || row===7&&col===2 || row===8&&col===2 || row===7&&col===3) {
+			if(row>=0&&row<=2&&col===6 || row===1&&col===7) {
 				rotate = 1;
 			}
-			if(row===12&&col===1 || row===12&&col===2 || row===12&&col===3 || row===13&&col===2) {
+			if(row===0&&col>=11&&col<=13 || row===1&&col===12) {
 				rotate = 2;
 			} 
-			if(row===16&&col===2 || row===17&&col===2 || row===18&&col===2 || row===17&&col===1) {
+			if(row>=0&&row<=2&&col===18 || row===1&&col===17) {
 				rotate = 3;
 			}
 		}
 		if ($scope.shape === 15) {
-			if(row===1&&col===1 || row===1&&col===2 || row===2&&col===1 || row===2&&col===2 || row===3&&col===1) {
+			if(row>=0&&row<=1&&col>=1&&col<=2 || row===2&&col===1) {
 				rotate = 0;
 			}
-			if(row===6&&col===1 || row===6&&col===2 || row===6&&col===3 || row===7&&col===2 || row===7&&col===3) {
+			if(row>=1&&row<=2&&col>=7&&col<=8 || row===1&&col===6) {
 				rotate = 1;
 			}
-			if(row===12&&col===2 || row===13&&col===2 || row===11&&col===3 || row===12&&col===3 || row===13&&col===3) {
+			if(row>=1&&row<=2&&col>=12&&col<=13 || row===0&&col===13) {
 				rotate = 2;
 			}
-			if(row===16&&col===1 || row===16&&col===2 || row===17&&col===1 || row===17&&col===2 || row===17&&col===3) {
+			if(row>=1&&row<=2&&col>=17&&col<=18 || row===2&&col===19) {
 				rotate = 3;
 			}
-			if(row===21&&col===2 || row===22&&col===2 || row===21&&col===3 || row===22&&col===3 || row===23&&col===3) {
+			if(row>=4&&row<=5&&col>=1&&col<=2 || row===6&&col===2) {
 				rotate = 4;
 			}
-			if(row===26&&col===2 || row===26&&col===3 || row===27&&col===1 || row===27&&col===2 || row===27&&col===3) {
+			if(row>=5&&row<=6&&col>=7&&col<=8 || row===6&&col===6) {
 				rotate = 5;
 			}
-			if(row===31&&col===1 || row===32&&col===1 || row===33&&col===1 || row===32&&col===2 || row===33&&col===2) {
+			if(row>=5&&row<=6&&col>=12&&col<=13 || row===4&&col===12) {
 				rotate = 6;
 			}
-			if(row===36&&col===1 || row===36&&col===2 || row===36&&col===3 || row===37&&col===1 || row===37&&col===2) {
+			if(row>=5&&row<=6&&col>=17&&col<=18 || row===5&&col===19) {
 				rotate = 7;
 			}
 		}
 		if($scope.shape === 16) {
-			if(row===1&&col===2 || row===1&&col===3 || row===2&&col===1 || row===2&&col===2 || row===3&&col===1) {
+			if(row===0&&col===2 || row===0&&col===3 || row===1&&col===1 || row===1&&col===2 || row===2&&col===1) {
 				rotate = 0;
 			}
-			if(row===6&&col===1 || row===6&&col===2 || row===7&&col===2 || row===7&&col===3 || row===8&&col===3) {
+			if(row===0&&col===6 || row===0&&col===7 || row===1&&col===7 || row===1&&col===8 || row===2&&col===8) {
 				rotate = 1;
 			}
-			if(row===11&&col===3 || row===12&&col===3 || row===12&&col===2 || row===13&&col===2 || row===13&&col===1){
+			if(row===2&&col===12 || row===2&&col===13 || row===1&&col===13 || row===1&&col===14 || row===0&&col===14){
 				rotate = 2;
 			}
-			if(row===16&&col==1 || row===17&&col===1 || row===17&&col==2 || row===18&&col===2 || row===18&&col===3){
+			if(row===0&&col==17 || row===1&&col===17 || row===1&&col==18 || row===2&&col===18 || row===2&&col===19){
 				rotate = 3;
 			}
 		}
 		if($scope.shape === 17) {
-			if(row===1&&col===1 || row===1&&col===2 || row===2&&col===1 || row===3&&col===1 || row===3&&col===2) {
+			if(row>=0&&row<=2&&col===1 || row===0&&col===2 || row===2&&col===2) {
 				rotate = 0;
 			}
-			if(row===6&&col===1 || row===6&&col===2 || row===6&&col===3 || row===7&&col===1 || row===7&&col===3) {
+			if(row===1&&col>=6&&col<=8 || row===2&&col===6 || row===2&&col===8) {
 				rotate = 1;
 			}
-			if(row===11&&col===3 || row===12&&col===3 || row===13&&col===3 || row===11&&col===2 || row===13&&col===2) {
+			if(row>=0&&row<=2&&col===13 || row===0&&col===12 || row===2&&col===12) {
 				rotate = 2;
 			}
-			if(row===17&&col===1 || row===17&&col===2 || row===17&&col===3 ||row===16&&col===1 || row===16&&col===3) {
+			if(row===2&&col>=17&&col<=19 || row===1&&col===17 || row===1&&col===19) {
 				rotate = 3;
 			}
 		}
 		if ($scope.shape === 18) {
-			if(row===1&&col===2 || row===2&&col===2 || row===3&&col===2 || row===1&&col===3 || row===2&&col===1) {
+			if(row>=0&&row<=2&&col===2 || row===1&&col===1 || row===0&&col===3) {
 				rotate = 0;
 			}
-			if(row===7&&col===1 || row===7&&col===2 || row===7&&col===3 || row===6&&col===2 || row===8&&col===3) {
+			if(row===1&&col>=6&&col<=8 || row===0&&col===7 || row===2&&col===8) {
 				rotate = 1;
 			}
-			if(row===11&&col===2 || row===12&&col===2 || row===13&&col===2 || row===12&&col===3 || row===13&&col===1) {
+			if(row>=0&&row<=2&&col===13 || row===2&&col===12 || row===1&&col===14) {
 				rotate = 2;
 			}
-			if (row===17&&col===1 || row===17&&col===2 || row===17&&col===3 || row===16&&col===1 || row===18&&col===2) {
+			if (row===1&&col>=17&&col<=19 || row===0&&col===17 || row===2&&col===18) {
 				rotate = 3;
 			}
-			if(row===21&&col===2 || row===22&&col===2 || row===23&&col===2 || row===21&&col===1 || row===22&&col===3) {
+			if(row>=4&&row<=6&&col===2 || row===4&&col===1 || row===5&&col===3) {
 				rotate = 4;
 			}
-			if(row===27&&col===1 || row===27&&col===2 || row===27&&col===3 || row===26&&col===3 || row===28&&col===2) {
+			if(row===5&&col>=6&&col<=8 || row===6&&col===7 || row===4&&col===8) {
 				rotate = 5;
 			}
-			if(row===31&&col===2 || row===32&&col===2 || row===33&&col==2 || row===32&&col===1 || row===33&&col===3) {
+			if(row>=4&&row<=6&&col===13 || row===5&&col===12 || row===6&&col===14) {
 				rotate = 6;
 			}
-			if(row===37&&col===1 || row===37&&col===2 || row===37&&col===3 || row===36&&col===2 || row===38&&col===1) {
+			if(row===4&&col>=17&&col<=19 || row===6&&col==17 || row===4&&col===18) {
 				rotate = 7;
 			}
 		}
 		if ($scope.shape === 19) {
-			if (row===1&&col===2 || row===2&&col===1 || row===2&&col===2 || row===2&&col===3 || row===3&&col===2) {
+			if (row===0&&col===2 || row===1&&col===2 || row===2&&col===2 || row===1&&col===1 || row===1&&col===3) {
 				rotate = 0;
 			}
 		}
 		if ($scope.shape === 20) {
-			if(row===1&&col===2 || row===2&&col===1 || row===2&&col===2 || row===2&&col===3 || row===2&&col===4) {
+			if(row===2&&col>=0&&col<=3 || row===1&&col===1) {
 				rotate = 0;
 			}
-			if(row===6&&col===2 || row===7&&col===2 || row===8&&col===2 || row===9&&col===2 || row===7&&col===3) {
+			if(row>=0&&row<=3&&col===6 || row===1&&col===7) {
 				rotate = 1;
 			}
-			if(row===12&&col===0 || row===12&&col===1 || row===12&&col===2 || row===12&&col===3 || row===13&&col===2) {
+			if(row===1&&col>=11&&col<=14 || row===2&&col===13) {
 				rotate = 2;
 			}
-			if(row===15&&col===2 || row===16&&col===2 || row===17&&col===2 || row===18&&col===2 || row===17&&col===1) {
+			if(row>=0&&row<=3&&col===18 || row===2&&col===17) {
 				rotate = 3;
 			}
-			if(row===22&&col===0 || row===22&&col===1 || row===22&&col===2 || row===22&&col===3 || row===21&&col===2) {
+			if(row===7&&col>=0&&col<=3 || row===6&&col===2) {
 				rotate = 4;
 			}
-			if(row===26&&col===2 || row===27&&col===2 || row===28&&col===2 || row===29&&col===2 || row===28&&col===3) {
+			if(row>=5&&row<=8&&col===6 || row===7&&col===7) {
 				rotate = 5;
 			}
-			if(row===32&&col===1 || row===32&&col===2 || row===32&&col===3 || row===32&&col===4 || row===33&&col===2) {
+			if(row===6&&col>=11&&col<=14 || row===7&&col===12) {
 				rotate = 6;
 			}
-			if(row===36&&col===2 || row===37&&col===2 || row===38&&col===2 || row===39&&col===2 || row===37&&col===1) {
+			if(row>=5&&row<=8&&col===18 || row===6&&col===17) {
 				rotate = 7;
 			}
 		}
@@ -607,16 +606,9 @@ angular.module('myApp')
 		var rotate = $scope.getRotate(row,col);
 		if (rotate >= 0) {
 			$scope.rotate = rotate; // if the player clicks on a legal rotation, store the rotation in $scope.rotate
-		} else {
-			$scope.rotate = 0; // else default rotation to 0;
 		}
-		
 	}
 		
-	$scope.shapeClicked = function (shape) {
-		$scope.shape = shape;
-	}
-	
 	$scope.boardAreaCellClicked = function (row, col) {
 		$log.info(["Clicked on cell:", row, col]);
 		if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
@@ -628,21 +620,23 @@ angular.module('myApp')
 		if ($scope.shape === -1) { // if the player haven't select a shape, the game should do nothing
 			return;
 		}
+		if ($scope.rotate === -1) { // if the player haven't select a rotation, the game should do nothing
+			return;
+		}
 		try {
-
 			var placement = gameLogic.getPlacement(row, col, $scope.shape, $scope.rotate);
 			var move = gameLogic.createMove($scope.state, placement, $scope.shape, $scope.turnIndex);
 			$scope.isYourTurn = false; // to prevent making another move
-			$scope.shape = -1; // to reset the shape being selected
-			/**need to reset $scope.rotate also*/
 			gameService.makeMove(move);
+			$scope.shape = -1; // to reset the shape being selected
+			$scope.rotate = -1; // reset the rotate
 		} catch (e) {
 			$log.info(["This is an illegal move:", row, col]);
 			return;
 		}
     };
 
-    $scope.shapAreaCellClicked = function (row, col) {
+    $scope.shapeAreaCellClicked = function (row, col) {
 		// row = row - 1;
 		var shapeNum = $scope.getShape(row, col);
 		// ignore if the shape has been used
@@ -650,8 +644,8 @@ angular.module('myApp')
 			return;
 		}
 	  $log.info(["Clicked on shape:", shapeNum]);
-	  $scope.rotate = 0; //everytime clicked on a shape, reset the rotate variable to 0(default);
       $scope.shape = shapeNum;
+	  $scope.rotate = -1;
     };
 	/*need to edit 03/26*/
 	$scope.getShapeCellColorStyle= function(row, col) {
@@ -664,68 +658,69 @@ angular.module('myApp')
 			return {background: '#E8E8E8'};
 		}
     }
+	/*updated on 04/01/2015*/
 	$scope.getShape = function(row, col) {
-      if (row === 0 && col === 2) {
+      if (row === 0 && col === 4) {
         return 0;
-      }
-      if (col === 2 && (row === 2 || row === 3)) {
+      } 
+      if (col === 0 && (row === 3 || row === 4)) {
         return 1;
       }
-      if (col === 2 && (row === 5 || row === 6 || row === 7)) {
+      if (col === 2 && (row === 2 || row === 3 || row === 4)) {
         return 2;
       }
-      if (col === 2 && (row === 9 || row === 10 || row === 11 || row === 12)) {
+      if (col === 7 && (row === 1 || row === 2 || row === 3 || row === 4)) {
         return 3;
       }
-      if (col === 2 && (row === 14 || row === 15 || row === 16 || row === 17 || row === 18)) {
+      if (col === 9 && (row >=0 && row <= 4)) {
         return 4;
       }
-      if ((col === 2 && (row === 20 || row === 21)) || (row == 21 && col === 3)) {
+      if (row === 3 && col === 11 || row === 4 && col === 11 || row === 4 && col === 12) {
         return 5;
       }
-      if ((col === 2 && (row === 23 || row === 24 || row === 25)) || (row === 25 && col === 3)) {
+      if (row === 0 && (col >= 0 && col <= 2) ||row === 1 && col === 0) {
         return 6;
       }
-      if ((row === 27 && (col === 2 || col === 3)) || row === 28 && (col === 1 || col === 2)) {
+      if ((row === 1 && (col === 11 || col === 12)) || row === 0 && (col === 12 || col === 13)) {
         return 7;
       }
-      if ((row === 30 && (col === 1 || col === 2)) || (row === 31 && (col === 1 || col === 2))) {
+      if ((row === 0 && (col === 15 || col === 16)) || (row === 1 && (col === 15 || col === 16))) {
         return 8;
       }
-      if ((row === 33 && col === 1) || (row === 34 && (col === 1 || col === 2 || col === 3 || col === 4))) {
+      if ((row === 0 && col === 18) || (col === 19 && row >= 0 && row <= 3)) {
         return 9;
       }
-      if ((col === 2 && (row === 36 || row === 37 || row === 38)) || (row === 38 && (col === 1 || col === 3))) {
+      if (row === 7 && (col === 0 || col === 1) || col === 2 && (row >= 6 && row <= 8)) {
         return 10;
       }
-      if ((col === 6 && (row === 0 || row === 1 || row === 2)) || (row === 2 && (col === 7 || col === 8))) {
+      if ((col === 0 && (row === 9 || row === 10 || row === 11)) || (row === 11 && (col === 1 || col === 2))) {
         return 11;
       }
-      if ((row === 4 && (col === 7 || col === 8 || col === 9)) || (row === 5 && (col === 6 || col === 7))) {
+      if ((row === 10 && (col === 16 || col === 17) || (row === 11 && (col === 17 || col === 18 || col === 19)))) {
         return 12;
       }
-      if ((row === 7 && col === 8) || (row === 8 && (col === 6 || col === 7 || col === 8)) || (row === 9 && col === 6)) {
+      if ((row === 9 && col === 12) || (row === 10 && (col === 10 || col === 11 || col === 12)) || (row === 11 && col === 10)) {
         return 13;
       }
-      if ((row === 11 && col === 7) || (row === 12 && (col === 6 || col === 7 || col === 8))) {
+      if ((row === 3 && col === 5) || (col === 4 && (row >= 2 && row <= 4))) {
         return 14;
       }
-      if ((col === 6 && (row === 14 || row === 15 || row === 16)) || (col === 7 && (row === 14 || row === 15))) {
+      if ((row === 7 && (col === 18 || col === 19)) || row === 6 && (col >= 17 && col <= 19)) {
         return 15;
       }
-      if ((row === 18 && (col === 7 || col === 8)) || (row === 19 && (col === 6 || col === 7)) || (row === 20 && col === 6)) {
-        return 16;
-      }
-      if ((col ===6 && (row === 22 || row === 23 || row === 24)) || (col === 7 && (row === 22 || row === 24))) {
+	  if (row === 11 && (col === 4 || col === 5) || row === 10 && (col === 5 || col === 6) || row === 9 && col === 6) {
+		  return 16;
+	  }
+      if (row === 3 && (col === 14 || col === 16) || row === 4 && col >= 14 && col <= 16) {
         return 17;
       }
-      if ((row === 27 && (col === 7 || col === 8)) || (row === 28 && (col === 6 || col === 7)) || (row === 29 && col === 7)) {
+      if (row === 6 && col === 9 || col === 10 && row >= 6 && row <= 8 || row === 7 && col === 11) {
         return 18;
       }
-      if ((row === 32 && col === 7) || (row === 33 && (col === 6 || col === 7 || col === 8)) || (row === 34 && col === 7)) {
+      if ((row === 6 && col === 14) || (row === 7 && (col === 13|| col === 14 || col === 15)) || (row === 8 && col === 14)) {
         return 19;
       }
-      if ((row === 37 && col === 7) || (row === 38 && (col === 6 || col === 7 || col === 8 || col === 9))) {
+      if (row === 7 && col === 5 || row === 6 && col >= 4 && col <= 7) {
         return 20;
       }
       return -1;
