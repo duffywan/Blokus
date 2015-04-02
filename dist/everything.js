@@ -1247,7 +1247,7 @@ function getPlacement(row, col, shape, r) {
 			if(row >= 0 && row <= 2 && col === 1 || row === 2 && col === 2){
 				rotate = 0;
 			}
-			if(col >= 6 && col <= 8 && row === 1 || row === 2 && col === 2) {
+			if(col >= 6 && col <= 8 && row === 1 || row === 2 && col === 6) {
 				rotate = 1;
 			}
 			if(row >= 0 && row <= 2 && col === 12 || row === 0 && col === 11){
@@ -1262,7 +1262,7 @@ function getPlacement(row, col, shape, r) {
 			if (col >= 6 && col <= 8 && row === 6 || row === 5 && col === 6) {
 				rotate = 5;
 			}
-			if (row >= 4 && row <= 4 && col === 11 || row === 4 && col === 12) {
+			if (row >= 4 && row <= 6 && col === 11 || row === 4 && col === 12) {
 				rotate = 6;
 			}
 			if(col >= 16 && col <= 18 && row === 5 || row === 6 && col === 18){
@@ -1279,7 +1279,7 @@ function getPlacement(row, col, shape, r) {
 			if(row===1&&col===11 || row===1&&col===12 || row===2&&col===12 || row===2&&col===13){
 				rotate = 4;
 			}
-			if(row===1&&col===17 || row===2&&col===17 || row===0&&col===18 || row===2&&col===18){
+			if(row===1&&col===17 || row===2&&col===17 || row===0&&col===18 || row===1&&col===18){
 				rotate = 5;
 			}
 		}
@@ -1472,7 +1472,7 @@ function getPlacement(row, col, shape, r) {
 			if(row>=4&&row<=6&&col===13 || row===5&&col===12 || row===6&&col===14) {
 				rotate = 6;
 			}
-			if(row===4&&col>=17&&col<=19 || row===6&&col==17 || row===4&&col===18) {
+			if(row===5&&col>=17&&col<=19 || row===6&&col==17 || row===4&&col===18) {
 				rotate = 7;
 			}
 		}
