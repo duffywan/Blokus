@@ -9,8 +9,12 @@ angular.module('myApp')
 		
 	/*set background color of boardArea square when dragging */
 	function setSquareBackgroundColor(row, col, color) {
-		document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = color;
-    }
+		if(color==="#F0F0F0") {
+			document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = color;
+		}else {
+			document.getElementById('e2e_test_board_div_' + row + 'x' + col).style.background = 'radial-gradient('+color+',white)';
+		}
+	}
 	/*set background color of boardArea when dragging*/
     function setBoardBackgroundColor() {
 		var num = getRowColNum('board');
@@ -23,7 +27,11 @@ angular.module('myApp')
 	/*set the style for boardArea square*/
 	$scope.setBoardAreaSquareStyle = function(row, col) {
 		var color = getBoardSquareColor(row, col);
-		return {background:color};
+		if($scope.state.board[row][col] === '') {
+			return {background:color};
+		} else {
+			return {background: 'radial-gradient('+color+',white)'};
+		}
 	}
 	/*return the square color on the boardArea. Red, green, blue, yellow for player0, 1, 2, 3. Grey for empty board square*/
 	function getBoardSquareColor(row, col) {
@@ -275,10 +283,10 @@ angular.module('myApp')
     }
 	$scope.getRotateAreaSquareColor = function(row, col) {
 		if ($scope.getRotate(row, col) === -1) { // if this square is not a part of a rotated shape
-			return {background: 'white'};
+			return {background: '#F0F0F0'};
 		}
 		var color = getTurnColor();
-		return {background: color};
+		return {background: 'radial-gradient('+color+',white)'};
 	}
 	/*updated on 04/01/2015*/
 	/*return the rotation index for the selected shape*/
@@ -653,9 +661,9 @@ angular.module('myApp')
 		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.turnIndex] != undefined && $scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
 			var color = getTurnColor();
 			return {
-				background: color};
+				background: 'radial-gradient('+color+',white)'};
 		} else {
-			return {background: 'white'};
+			return {background: '#F0F0F0'};
 		}
     }
 	/*updated on 04/01/2015*/
