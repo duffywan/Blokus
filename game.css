@@ -1,26 +1,26 @@
 .r {
-  border-right: 1pt double white;
+  border-right: 1pt solid white;
 }
 .t {
-  border-top: 1pt double white;
+  border-top: 1pt solid white;
 }
 
 .l {
-  border-left: 1pt double white;
+  border-left: 1pt solid white;
 }
 
 .b {
-  border-bottom: 1pt double white;
+  border-bottom: 1pt solid white;
 }
 .white_t{
-	border-top: 1pt double white;
+	border-top: 1pt solid white;
 }
 
 .white_b{
-	border-bottom: 1pt double white;
+	border-bottom: 1pt solid white;
 }
 .white_l{
-	border-left: 1pt double white;
+	border-left: 1pt solid white;
 }
 .white_r{
 	border-right: 1pt solid white;
