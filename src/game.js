@@ -275,7 +275,7 @@ angular.module('myApp')
     }
 	$scope.getRotateAreaSquareColor = function(row, col) {
 		if ($scope.getRotate(row, col) === -1) { // if this square is not a part of a rotated shape
-			return {background: '#F0F0F0'};
+			return {background: 'white'};
 		}
 		var color = getTurnColor();
 		return {background: color};
@@ -655,7 +655,7 @@ angular.module('myApp')
 			return {
 				background: color};
 		} else {
-			return {background: '#F0F0F0'};
+			return {background: 'white'};
 		}
     }
 	/*updated on 04/01/2015*/
