@@ -41,6 +41,7 @@ angular.module('myApp')
 			return '#F0F0F0';
 		}
 	}
+
 	function getTurnColor() {
 		var color = ['#FF3399', '#99FF33', '#33CCFF', '#FF9900'];
 		return color[$scope.turnIndex];
@@ -280,7 +281,9 @@ angular.module('myApp')
 			return {background: '#F0F0F0'};
 		}
 		var color = getTurnColor();
-		return {background: color};
+		return {
+			border: '1pt solid white',
+			background: color};
 	}
 	/*updated on 04/01/2015*/
 	/*return the rotation index for the selected shape*/
@@ -655,6 +658,7 @@ angular.module('myApp')
 		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.turnIndex] != undefined && $scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
 			var color = getTurnColor();
 			return {
+				border: '1pt solid white',
 				background: color};
 		} else {
 			return {background: '#F0F0F0'};
