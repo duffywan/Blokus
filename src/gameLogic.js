@@ -485,7 +485,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row - 1, col ]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ]);
+			placement.push([row, col - 1], [row, col]);
 		}
 		break;
 	case 2:
@@ -493,7 +493,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ]);
+			placement.push([ row, col - 2], [ row, col - 1 ], [ row, col ]);
 		}
 		break;
 	case 3:
@@ -502,8 +502,7 @@ function getPlacement(row, col, shape, r) {
 					row - 3, col ]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row, col + 3 ]);
+			placement.push([row, col - 3],[row, col - 2],[row, col - 1], [row, col]);
 		}
 		break;
 	case 4:
@@ -512,36 +511,32 @@ function getPlacement(row, col, shape, r) {
 					row - 3, col ], [ row - 4, col ]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row, col + 3 ], [ row, col + 4 ]);
+			placement.push([row, col - 4],[row, col - 3],[row, col - 2],[row, col - 1], [row, col]);
 		}
 		break;
 	case 5:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ]);
+			placement.push([row, col],[row, col - 1], [row - 1, col - 1]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row + 1, col ]);
+			placement.push([row, col],[row, col - 1], [row + 1, col - 1]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row, col - 1 ]);
+			placement.push([row, col],[row - 1, col], [row - 1, col - 1]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row - 1, col ]);
+			placement.push([row, col],[row - 1, col],[row, col - 1]);
 		}
 		break;
 	case 6:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
-					row, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row - 1, col - 1],[row - 2, col - 1]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row + 1, col ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row + 1, col - 2]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
-					row, col - 1 ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 2, col - 1]);
 		}
 		if (r === 3) {
 			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
@@ -552,54 +547,43 @@ function getPlacement(row, col, shape, r) {
 					row, col - 1 ]);
 		}
 		if (r === 5) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row - 1, col ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row - 1, col - 2]);
 		}
 		if (r === 6) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
-					row, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row + 1, col - 1],[row + 2, col - 1]);
 		}
 		if (r === 7) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
-					row + 1, col ]);
+			placement.push([row, col],[row - 1, col],[row - 1, col - 1], [row - 1, col - 2]);
 		}
 		break;
 	case 7:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col + 1 ], [ row, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row + 1, col - 1],[row + 1, col - 2]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col + 1 ], [ row - 1, col ]);
+			placement.push([row, col], [row - 1, col], [row - 1, col - 1], [row - 2, col - 1]);
 		}
 		if (r === 4) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col - 1 ], [ row, col + 1 ]);
+			placement.push([row, col], [row, col - 1],[row - 1, col - 1],[row - 1, col - 2]);
 		}
 		if (r === 5) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row - 1, col + 1 ], [ row + 1, col]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row + 1, col - 1]);
 		}
 		break;
 	case 8:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col + 1 ], [ row, col + 1 ]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row - 1, col - 1]);
 		}
 		break;
 	case 9:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
-					row, col + 2 ], [ row, col + 3 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2], [row, col - 3],[row - 1, col - 3]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row + 1, col ], [
-					row + 2, col ], [ row + 3, col ]);
+			placement.push([row, col],[row, col - 1],[row + 1, col - 1],[row + 2, col - 1],[row + 3, col - 1]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row, col - 1 ], [
-					row, col - 2 ], [ row, col - 3 ]);
+			placement.push([row, col],[row - 1, col], [row - 1, col - 1],[row - 1, col - 2],[row - 1, col - 3]);
 		}
 		if (r === 3) {
 			placement.push([ row, col ], [ row, col - 1 ], [ row - 1, col ], [
@@ -610,48 +594,38 @@ function getPlacement(row, col, shape, r) {
 					row, col - 2 ], [ row, col - 3 ]);
 		}
 		if (r === 5) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row - 1, col ], [
-					row - 2, col ], [ row - 3, col ]);
+			placement.push([row, col],[row, col - 1],[row - 1, col - 1],[row - 2, col - 1],[row - 3, col - 1]);
 		}
 		if (r === 6) {
-			placement.push([ row, col ], [ row + 1, col ], [ row, col + 1 ], [
-					row, col + 2 ], [ row, col + 3 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2], [row, col - 3], [row + 1, col - 3]);
 		}
 		if (r === 7) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row + 1, col ], [
-					row + 2, col ], [ row + 3, col ]);
+			placement.push([row, col], [row - 1, col],[row - 2, col], [row - 3, col], [row - 3, col - 1]);
 		}
 		break;
 	case 10:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
-					row, col + 1 ], [ row, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2], [row - 1, col - 1],[row - 2, col - 1]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row - 1, col ], [ row + 1, col ]);
+			placement.push([row, col], [row, col - 1],[row, col - 2], [row - 1, col - 2],[row + 1, col - 2]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
-					row, col - 1 ], [ row, col + 1 ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 2, col - 1],[row - 2, col + 1]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
-					row - 1, col ], [ row + 1, col ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 1, col - 1],[row - 1, col - 2]);
 		}
 		break;
 	case 11:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
-					row, col + 1 ], [ row, col + 2 ]);
+			placement.push([row, col], [row, col - 1],[row, col - 2], [row - 1, col - 2],[row - 2, col - 2]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row + 1, col ], [ row + 2, col ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2], [row + 1, col - 2],[row + 2, col - 2]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
-					row, col - 1 ], [ row, col - 2 ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 2, col - 1],[row - 2, col - 2]);
 		}
 		if (r === 3) {
 			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
@@ -661,232 +635,174 @@ function getPlacement(row, col, shape, r) {
 
 	case 12:
 		if (r === 0) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row + 1, col ], [ row + 1, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row + 1, col - 2], [row + 1, col - 3]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
-					row, col - 1 ], [ row - 1, col - 1 ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 2, col - 1],[row - 3, col - 1]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
-					row - 1, col ], [ row - 1, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row + 1, col - 1],[row + 1, col - 2], [row + 1, col - 3]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
-					row, col + 1 ], [ row + 1, col + 1 ]);
+			placement.push([row, col],[row - 1, col],[row - 1, col - 1],[row - 2, col - 1],[row - 3, col - 1]);
 		}
 		if (r === 4) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row, col - 2 ], [
-					row + 1, col ], [ row + 1, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row - 1, col - 1],[row - 1, col - 2],[row - 1, col - 3]);
 		}
 		if (r === 5) {
 			placement.push([ row, col ], [ row - 1, col ], [ row - 2, col ], [
 					row, col - 1 ], [ row + 1, col - 1 ]);
 		}
 		if (r === 6) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row, col + 2 ], [
-					row - 1, col ], [ row - 1, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row - 1, col - 2], [row - 1, col - 3]);
 		}
 		if (r === 7) {
-			placement.push([ row, col ], [ row + 1, col ], [ row + 2, col ], [
-					row, col + 1 ], [ row - 1, col + 1 ]);
+			placement.push([row, col],[row - 1, col],[row , col - 1],[row + 1, col - 1],[row + 2, col - 1]);
 		}
 		break;
 
 	case 13:
 		if (r === 0) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row - 1, col + 1 ], [ row, col - 1 ],
-					[ row + 1, col - 1 ]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row, col - 2],[row + 1, col - 2]);
 
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col + 1 ], [ row - 1, col ],
-					[ row - 1, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row - 1, col - 1],[row - 2, col - 1],[row - 2, col - 2]);
 		}
 		if (r === 4) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row - 1, col - 1 ], [ row, col + 1 ],
-					[ row + 1, col + 1 ]);
+			placement.push([row, col],[row - 1, col],[row - 1, col - 1],[row - 1, col - 2],[row - 2, col - 2]);
 
 		}
 		if (r === 5) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col + 1 ], [ row + 1, col ],
-					[ row + 1, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row + 1, col - 1],[row + 2, col - 1],[row + 2, col - 2]);
 		}
 		break;
 	case 14:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
-					row, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row - 1, col - 1]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row + 1, col ], [
-					row - 1, col ]);
+			placement.push([row, col],[row + 1, col - 1],[row, col - 1],[row - 1, col - 1]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row, col - 1 ], [
-					row, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row + 1, col - 1]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row - 1, col ], [
-					row + 1, col ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 1, col - 1]);
 		}
 		break;
 	case 15:
 		if (r === 0) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col], [ row + 1, col + 1], [ row + 2, col ]);
+			placement.push([row, col],[row - 1, col],[row - 1, col - 1],[row, col - 1],[row + 1, col - 1]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col - 1 ], [ row, col - 1 ], [ row, col - 2 ]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row - 1, col - 1],[row - 1, col - 2]);
 		}
 		if (r === 2) {
 			placement.push([ row, col ], [ row, col - 1 ],
 					[ row - 1, col], [ row - 1, col - 1 ], [ row - 2, col]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col + 1 ], [ row, col + 1 ], [ row, col + 2 ]);
+			placement.push([row, col],[row - 1, col - 1],[row, col - 1],[row - 1, col - 2],[row, col - 2]);
 		}
 		if (r === 4) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row + 1, col - 1 ], [ row + 1, col ], [ row + 2, col ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 1, col - 1],[row - 2, col - 1]);
 		}
 		if (r === 5) {
 			placement.push([ row, col ], [ row - 1, col ],
 					[ row - 1, col - 1 ], [ row, col - 1 ], [ row, col - 2 ]);
 		}
 		if (r === 6) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row - 1, col + 1 ], [ row - 1, col ], [ row - 2, col ]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row - 1, col - 1],[row - 2, col - 1]);
 		}
 		if (r === 7) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row, col + 2 ], [ row + 1, col], [ row + 1, col + 1]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row + 1, col - 1],[row + 1, col - 2]);
 		}
 		break;
 	case 16:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col + 1 ], [ row, col - 1 ],
-					[ row + 1, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row + 1, col - 1],[row + 1, col - 2],[row + 2, col - 2]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col + 1 ], [ row - 1, col ],
-					[ row - 1, col - 1 ]);
+			placement.push([row, col],[row - 1, col],[row - 1, col - 1],[row - 2, col - 1],[row - 2, col - 2]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col - 1 ], [ row, col + 1 ],
-					[ row - 1, col + 1 ]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row + 1, col - 1],[row + 1, col - 2]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row - 1, col - 1 ], [ row + 1, col ],
-					[ row + 1, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row - 1, col - 1],[row - 1, col - 2],[row - 2, col - 2]);
 		}
 		break;
 	case 17:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col + 1 ], [ row + 1, col ],
-					[ row + 1, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row - 1, col - 1],[row - 2, col - 1],[row - 2, col]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col + 1 ], [ row, col - 1 ],
-					[ row + 1, col - 1 ]);
+			placement.push([row, col],[row - 1, col],[row - 1, col - 1],[row - 1, col - 2],[row, col - 2]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col - 1 ], [ row - 1, col ],
-					[ row - 1, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row - 1, col],[row - 2, col],[row - 2, col - 1]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row - 1, col - 1 ], [ row, col + 1 ],
-					[ row - 1, col + 1 ]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row, col - 2],[row - 1, col - 1]);
 		}
 		break;
 	case 18:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col + 1 ], [ row + 1, col ], [ row, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row + 1, col - 1],[row + 2, col - 1],[row + 1, col - 2]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row + 1, col + 1 ], [ row, col - 1 ], [ row - 1, col ]);
+			placement.push([row, col],[row - 1, col],[row - 1, col - 1],[row - 1, col - 2],[row - 2, col - 1]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col - 1 ], [ row - 1, col ], [ row, col + 1 ]);
+			placement.push([row, col],[row - 1, col - 1],[row, col - 1],[row + 1, col - 1],[row + 1, col - 2]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row - 1, col - 1 ], [ row, col + 1 ], [ row + 1, col ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row - 1, col - 2],[row + 1, col - 1]);
 		}
 		if (r === 4) {
-			placement.push([ row, col ], [ row - 1, col ],
-					[ row - 1, col - 1 ], [ row + 1, col ], [ row, col + 1 ]);
+			placement.push([row, col],[row - 1, col - 1],[row, col - 1],[row + 1, col - 1],[row - 1, col - 2]);
 		}
 		if (r === 5) {
-			placement.push([ row, col ], [ row, col + 1 ],
-					[ row - 1, col + 1 ], [ row, col - 1 ], [ row + 1, col ]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row, col - 2],[row + 1, col - 1]);
 		}
 		if (r === 6) {
-			placement.push([ row, col ], [ row + 1, col ],
-					[ row + 1, col + 1 ], [ row - 1, col ], [ row, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row - 1, col - 1],[row - 2, col - 1],[row - 1, col - 2]);
 		}
 		if (r === 7) {
-			placement.push([ row, col ], [ row, col - 1 ],
-					[ row + 1, col - 1 ], [ row, col + 1 ], [ row - 1, col ]);
+			placement.push([row, col],[row - 1, col - 1],[row, col - 1],[row, col - 2],[row + 1, col - 2]);
 
 		}
 		break;
 	case 19:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
-					row + 1, col ], [ row, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row - 1, col - 1],[row + 1, col - 1]);
 		}
 		break;
 	case 20:
 		if (r === 0) {
-			placement.push([ row, col ], [ row - 1, col ], [ row, col + 1 ], [
-					row, col + 2 ], [ row, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row, col - 3],[row - 1, col -2]);
 		}
 		if (r === 1) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row + 1, col ], [
-					row + 2, col ], [ row - 1, col ]);
+			placement.push([row, col],[row - 1, col - 1],[row, col - 1],[row + 1, col - 1],[row + 2, col - 1]);
 		}
 		if (r === 2) {
-			placement.push([ row, col ], [ row + 1, col ], [ row, col - 1 ], [
-					row, col - 2 ], [ row, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row, col - 3],[row + 1, col - 1]);
 		}
 		if (r === 3) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row - 1, col ], [
-					row - 2, col ], [ row + 1, col ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 3, col],[row - 1, col - 1]);
 		}
 		if (r === 4) {
-			placement.push([ row, col ], [ row - 1, col ], [ row, col - 1 ], [
-					row, col - 2 ], [ row, col + 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row, col - 3],[row - 1, col - 1]);
 		}
 		if (r === 5) {
-			placement.push([ row, col ], [ row, col + 1 ], [ row - 1, col ], [
-					row - 2, col ], [ row + 1, col ]);
+			placement.push([row, col],[row + 1, col - 1],[row, col - 1],[row - 1, col - 1],[row - 2, col - 1]);
 		}
 		if (r === 6) {
-			placement.push([ row, col ], [ row + 1, col ], [ row, col + 1 ], [
-					row, col + 2 ], [ row, col - 1 ]);
+			placement.push([row, col],[row, col - 1],[row, col - 2],[row, col - 3],[row + 1, col - 2]);
 		}
 		if (r === 7) {
-			placement.push([ row, col ], [ row, col - 1 ], [ row + 1, col ], [
-					row + 2, col ], [ row - 1, col ]);
+			placement.push([row, col],[row - 1, col],[row - 2, col],[row - 3, col],[row - 2, col - 1]);
 		}
 		break;
 	}
