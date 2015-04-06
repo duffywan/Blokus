@@ -744,7 +744,7 @@ function getPlacement(row, col, shape, r) {
 			placement.push([row, col],[row, col - 1],[row - 1, col],[row - 2, col],[row - 2, col - 1]);
 		}
 		if (r === 3) {
-			placement.push([row, col],[row - 1, col],[row, col - 1],[row, col - 2],[row - 1, col - 1]);
+			placement.push([row, col],[row - 1, col],[row, col - 1],[row, col - 2],[row - 1, col - 2]);
 		}
 		break;
 	case 18:
