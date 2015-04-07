@@ -30,20 +30,20 @@ angular.module('myApp')
 	/*return the square color on the boardArea. Red, green, blue, yellow for player0, 1, 2, 3. Grey for empty board square*/
 	function getBoardSquareColor(row, col) {
 		if ($scope.state.board[row][col] === '0') {
-			return '#FF3399';
-		} else if ($scope.state.board[row][col] === '1') {
-			return  '#99FF33';
-		} else if ($scope.state.board[row][col] === '2') {
 			return '#33CCFF';
+		} else if ($scope.state.board[row][col] === '1') {
+			return  '#FF9900';
+		} else if ($scope.state.board[row][col] === '2') {
+			return '#FF3399';
 		} else if ($scope.state.board[row][col] === '3') {
-			return '#FF9900';
+			return '#99FF33';
 		} else {
 			return '#F0F0F0';
 		}
 	}
 
 	function getTurnColor() {
-		var color = ['#FF3399', '#99FF33', '#33CCFF', '#FF9900'];
+		var color = ['#33CCFF', '#FF9900','#FF3399', '#99FF33'];
 		return color[$scope.turnIndex];
 	}
     function setPlacementBackgroundColor(row, col, placement) {

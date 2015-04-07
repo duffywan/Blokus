@@ -426,22 +426,15 @@ function placementInBound(board, placement) {
 }
 
 function isFirstMove(board, turnIndex) {
-	if (turnIndex === 0) {
-		return board[0][0] !== '0';
+	var label = turnIndex.toString();
+	if (board[0][0] === label || board[0][19] === label || board[19][0] === label || board[19][19] === label) {
+		return false;
 	}
-	if (turnIndex === 1) {
-		return board[0][19] !== '1';
-	}
-	if (turnIndex === 2) {
-		return board[19][0] !== '2';
-	}
-	if (turnIndex === 3) {
-		return board[19][19] !== '3';
-	}
-	return false;
+	return true;
 }
 
 function legalPlacement(board, placement, turnIndex) {
+	/*
 	var corner;
 	switch (turnIndex) {
 	case 0:
@@ -457,9 +450,12 @@ function legalPlacement(board, placement, turnIndex) {
 		corner = [ board.length - 1, board[0].length - 1 ];
 		break;
 	}
+	*/
+	console.log("123");
 	if (isFirstMove(board, turnIndex)) {
 		for (var i = 0; i < placement.length; i++) {
-			if (angular.equals(placement[i], corner)) {
+			if (angular.equals(placement[i], [0,0]) || angular.equals(placement[i], [0,19]) || 
+				angular.equals(placement[i], [19,0]) || angular.equals(placement[i], [19,19])) {
 				return placementInBound(board, placement)
 						&& !isOccupied(board, placement);
 			}
@@ -854,20 +850,20 @@ function getPlacement(row, col, shape, r) {
 	/*return the square color on the boardArea. Red, green, blue, yellow for player0, 1, 2, 3. Grey for empty board square*/
 	function getBoardSquareColor(row, col) {
 		if ($scope.state.board[row][col] === '0') {
-			return '#FF3399';
-		} else if ($scope.state.board[row][col] === '1') {
-			return  '#99FF33';
-		} else if ($scope.state.board[row][col] === '2') {
 			return '#33CCFF';
+		} else if ($scope.state.board[row][col] === '1') {
+			return  '#FF9900';
+		} else if ($scope.state.board[row][col] === '2') {
+			return '#FF3399';
 		} else if ($scope.state.board[row][col] === '3') {
-			return '#FF9900';
+			return '#99FF33';
 		} else {
 			return '#F0F0F0';
 		}
 	}
 
 	function getTurnColor() {
-		var color = ['#FF3399', '#99FF33', '#33CCFF', '#FF9900'];
+		var color = ['#33CCFF', '#FF9900','#FF3399', '#99FF33'];
 		return color[$scope.turnIndex];
 	}
     function setPlacementBackgroundColor(row, col, placement) {
