@@ -101,10 +101,12 @@ angular.module('myApp')
 		if (gameLogic.endOfMatch($scope.state.playerStatus)) {
 			return;
 		}
+		if (!$scope.isYourTurn) {
+			return;
+		}
 		clearDrag('board');
 		clearDrag('shape');
 		clearDrag('rotate');
-		
 		var gameArea = document.getElementById("gameArea");
 		// compute horizontal and vertical offset relative to boardArea, shapeArea, and rotateArea
 		var boardX = clientX - document.getElementById("gameArea").offsetLeft;
@@ -119,6 +121,7 @@ angular.module('myApp')
 		var shapeSize = getAreaSize('shape');
 		var rotateSize = getAreaSize('rotate');
 		var x, y;
+		// ignore drag and drop if it's the computers turn
         if (boardX > 0 && boardX < boardSize.width && boardY > 0 && boardY < boardSize.height) {
 			x = boardX;
 			y = boardY;
@@ -137,7 +140,6 @@ angular.module('myApp')
 		if (dragType === '') {
 			return;
 		}
-		console.log("dragType is  "+dragType);
 		// Inside gameArea. Let's find the containing square's row and col
 		var num = getRowColNum(dragType);
 		var areaSize = getAreaSize(dragType);

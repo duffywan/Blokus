@@ -179,7 +179,7 @@ function getPossibleMovesWithSqaureN(state, turnIndex, n){
 		shapes = shuffle([0,1,2,5]); // shapes with less than 4 squares;
 	}
 	var row_col = traverseBoard();
-	for (var h = 0; h < row_col.length && count < 5; h++) {
+	for (var h = 0; h < row_col.length && count < 1; h++) {
 		var i = row_col[h][0];
 		var j = row_col[h][1];
 		if (board[i][j] !== '') {
@@ -188,18 +188,16 @@ function getPossibleMovesWithSqaureN(state, turnIndex, n){
 		if (squareEdgeConnected(board, i, j, turnIndex)) {
 			continue;
 		}
-		for (var k = 0; k < shapes.length && count < 5; k++) {
+		for (var k = 0; k < shapes.length && count < 1; k++) {
 			var shape = shapes[k];
 			if (!freeShapes[turnIndex][shape]) {
 				continue;
 			}
-			for (var r = 0; r < 8 && count < 5; r++) {
+			var rotations = shuffle(getPossibleRotations(shape));
+			for (var r = 0; r < rotations.length && count < 1; r++) {
 				// there are total 8 possible rotations
-				if (!isValidRotation(shape, r)) {
-					continue;
-				}
 				var placement = getPlacement(i, j, shape, r);
-				if (legalPlacement(board, placement, turnIndex) && count < 5) {
+				if (legalPlacement(board, placement, turnIndex) && count < 1) {
 					possibleMoves.push(createMove(state, placement,shape, turnIndex));
 					count++;
 				}
@@ -229,6 +227,28 @@ function isValidRotation(shape, r) {
 	}
 	return false;
 }
+
+/*return the possible rotations for a given shape*/
+function getPossibleRotations(shape) {
+	var rotations = [];
+	if (shape === 0 || shape === 8 || shape === 19) {
+		rotations.push(0);
+	}
+	if (shape === 1 || shape === 2 || shape === 3 || shape === 4) {
+		rotations.push(0, 1);
+	}
+	if (shape === 5 || shape === 10 || shape === 11 || shape === 14 || shape === 16 || shape === 17) {
+		rotations.push(0, 1, 2, 3);
+	}
+	if (shape === 7 || shape === 13) {
+		rotations.push(0, 1, 4, 5);
+	}
+	if (shape === 6 || shape === 9 || shape === 12 || shape === 15 || shape === 18 || shape === 20) {
+		rotations.push(0, 1, 2, 3, 4, 5, 6, 7);
+	}
+	return rotations;
+}
+
 
 function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 	// example move = {setTurn(2), setBoard([[...]]), setPlayerStatus(true,
