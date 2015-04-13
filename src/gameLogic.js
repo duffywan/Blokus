@@ -4,6 +4,8 @@ angular.module('myApp', []).factory('gameLogic', function() {
 /**
  * Returns the initial Blokus board, which is a 20 * 20 matrix containing ''.
  */
+ 
+
 function getInitialBoard() {
 //
 	return [
@@ -59,7 +61,7 @@ function getInitialFreeShapes() {
 function getInitialPlayerStatus() {
 	return [true, true, true, true];
 }
-
+/*
 function getPossibleMoves(state, turnIndex) {
 	// example state = {board :[[...]...], playerStatus : [true, true, true,
 	// true], freeShapes = [[true,true, false...], [], [], []],
@@ -69,6 +71,9 @@ function getPossibleMoves(state, turnIndex) {
 	var possibleMoves = [];
 	var freeShapes = state.freeShapes;
 	var board = state.board;
+	var shapeOf5Squares = [4,9,10,11,12,13,15,16,17,18,19,20];
+	var shapeOf4Squares = [3,6,7,8,14];
+	var shapeOfLessThan4Squares = [0,1,2,5];
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[0].length; j++) {
 			if (board[i][j] !== '') {
@@ -77,10 +82,9 @@ function getPossibleMoves(state, turnIndex) {
 			if (squareEdgeConnected(board, i, j, turnIndex)) {
 				continue;
 			}
-			if (!isFirstMove && !squareCornerConnected(board, i, j, turnIndex)) {
-				continue;
-			}
-			for (var shape = 0; shape < freeShapes[turnIndex].length; shape++) {
+			
+			for (var k = 0; k < shapeOf5Squares.length; k++) {
+				var shape = shapeOf5Squares[k];
 				if (!freeShapes[turnIndex][shape]) {
 					continue;
 				}
@@ -91,9 +95,113 @@ function getPossibleMoves(state, turnIndex) {
 					}
 					var placement = getPlacement(i, j, shape, r);
 					if (legalPlacement(board, placement, turnIndex)) {
-						possibleMoves.push(createMove(state, placement,
-								shape, turnIndex));
+						possibleMoves.push(createMove(state, placement,shape, turnIndex));
 					}
+				}
+			}
+
+		}
+	}
+	if (possibleMoves.length > 0) {
+		return possibleMoves;
+	}
+	return possibleMoves;
+}
+*/
+
+function getPossibleMoves(state, turnIndex){
+	var possibleMoves = getPossibleMovesWithSqaureN(state, turnIndex, 5);
+	if (possibleMoves.length > 0) {
+		return possibleMoves;
+	} else {
+		possibleMoves = getPossibleMovesWithSqaureN(state, turnIndex, 4);
+		if (possibleMoves.length > 0) {
+			return possibleMoves;
+		} else {
+			return getPossibleMovesWithSqaureN(state, turnIndex, 3);
+		}
+	}
+}
+
+function traverseBoard(){
+	var row_col = [];
+	var num = 1;
+	var i;
+	var j;
+	for (var level = 9; level >=0; level--) {
+		i = level; 
+		j = level;
+		// going right;
+		for (; j < level + num; j++) {
+			row_col.push([i,j]);
+		}
+		// going down
+		for (; i < level + num; i++) {
+			row_col.push([i,j]);
+		}
+		// going left
+		for (; j > level; j--) {
+			row_col.push([i,j]);
+		}
+		// going up
+		for (; i > level; i--) {
+			row_col.push([i,j]);
+		}
+		num += 2;
+	}
+	return row_col;
+}
+
+function shuffle(array) {
+    var n = array.length;
+    for (var i = 0; i < n; i++) {
+        // choose index uniformly in [i, n-1]
+        var r = i + Math.floor((Math.random() * (n - i)));
+		var swap = array[r];
+		array[r] = array[i];
+        array[i] = swap;
+	}
+	return array;
+}
+
+/*return the possible moves which places a n-square shape*/
+function getPossibleMovesWithSqaureN(state, turnIndex, n){
+	var shapes = [];
+	var possibleMoves = [];
+	var freeShapes = state.freeShapes;
+	var board = state.board;
+	var count = 0;
+	if (n === 5) {
+		shapes = shuffle([4,9,10,11,12,13,15,16,17,18,19,20]); // shapes with 5 squares;
+	} else if (n === 4) {
+		shapes = shuffle([3,6,7,8,14]); // shapes with four squares;
+	} else {
+		shapes = shuffle([0,1,2,5]); // shapes with less than 4 squares;
+	}
+	var row_col = traverseBoard();
+	for (var h = 0; h < row_col.length && count < 5; h++) {
+		var i = row_col[h][0];
+		var j = row_col[h][1];
+		if (board[i][j] !== '') {
+			continue;
+		}
+		if (squareEdgeConnected(board, i, j, turnIndex)) {
+			continue;
+		}
+		for (var k = 0; k < shapes.length && count < 5; k++) {
+			var shape = shapes[k];
+			if (!freeShapes[turnIndex][shape]) {
+				continue;
+			}
+			for (var r = 0; r < 8 && count < 5; r++) {
+				// there are total 8 possible rotations
+				if (!isValidRotation(shape, r)) {
+					continue;
+				}
+				var placement = getPlacement(i, j, shape, r);
+				if (legalPlacement(board, placement, turnIndex) && count < 5) {
+					possibleMoves.push(createMove(state, placement,shape, turnIndex));
+					count++;
 				}
 			}
 		}
@@ -216,15 +324,13 @@ function canMove(board, freeShapes, turnIndex) {
 	if (isFirstMove(board, turnIndex)) {
 		return true;
 	}
-	for (var i = 0; i < board.length; i++) {
-		for (var j = 0; j < board[0].length; j++) {
+	
+	for (var i = 0; i < 20; i++) {
+		for (var j = 0; j < 20; j++) {
 			if (board[i][j] !== '') {
 				continue;
 			}
 			if (squareEdgeConnected(board, i, j, turnIndex)) {
-				continue;
-			}
-			if (!squareCornerConnected(board, i, j, turnIndex)) {
 				continue;
 			}
 			for (var shape = 0; shape < 21; shape++) {
@@ -236,7 +342,8 @@ function canMove(board, freeShapes, turnIndex) {
 						continue;
 					}
 					var placement = getPlacement(i, j, shape, r);
-					if (legalPlacement(board, placement, turnIndex)) {
+					if (placementInBound(board, placement) && !isOccupied(board, placement) && 
+						!edgeConnected(board, placement, turnIndex) && cornerConnected(board, placement, turnIndex)) {
 						return true;
 					}
 				}
@@ -451,7 +558,6 @@ function legalPlacement(board, placement, turnIndex) {
 		break;
 	}
 	*/
-	console.log("123");
 	if (isFirstMove(board, turnIndex)) {
 		for (var i = 0; i < placement.length; i++) {
 			if (angular.equals(placement[i], [0,0]) || angular.equals(placement[i], [0,19]) || 
@@ -816,6 +922,7 @@ function getPlacement(row, col, shape, r) {
 	  getPlacement: getPlacement,
       getPossibleMoves: getPossibleMoves,
 	  isOccupied:isOccupied,
-	  placementInBound: placementInBound
+	  placementInBound: placementInBound,
+	  getPossibleMovesWithSqaureN: getPossibleMovesWithSqaureN
   };
 });
