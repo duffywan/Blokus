@@ -1042,9 +1042,6 @@ function getPlacement(row, col, shape, r) {
 		if (!$scope.isYourTurn) {
 			return;
 		}
-		clearDrag('board');
-		clearDrag('shape');
-		clearDrag('rotate');
 		// compute horizontal and vertical offset relative to boardArea, shapeArea, and rotateArea
 		// boardArea.offsetLeft = 0; boardArea.offsetTop = 0;
 		var boardX = clientX - gameArea.offsetLeft - boardArea.offsetLeft;
