@@ -64,22 +64,9 @@ angular.module('myApp')
 	
 	window.handleDragEvent = handleDragEvent;
 	
-	function getAreaSize (type) {
-		var width = 0;
-		var height = 0;
-		if (type === 'board'){
-			width = document.getElementById("boardAreaRow0").clientWidth;
-			height = document.getElementById("boardAreaRow0").clientHeight * 20;
-		}
-		if (type === 'shape'){
-			width = document.getElementById("shapeAreaRow0").clientWidth;
-			height = document.getElementById("shapeAreaRow0").clientHeight * 12;
-		}
-		if (type === 'rotate'){
-			width = document.getElementById("rotateAreaRow0").clientWidth;
-			height = document.getElementById("rotateAreaRow0").clientHeight * 9;
-		}		
-		return {width: width,height: height};
+	function getAreaSize(type) {
+		var area = document.getElementById(type + "Area");
+		return {width:area.clientWidth, height:area.clientHeight};
 	}
 	
 	/*return true if the board square row X col is newly added, used for animation*/
@@ -98,6 +85,10 @@ angular.module('myApp')
 	}
 	
 	function handleDragEvent(type, clientX, clientY) {
+		var gameArea = document.getElementById("gameArea");
+		var boardArea = document.getElementById("boardArea");
+		var shapeArea = document.getElementById("shapeArea");
+		var rotateArea = document.getElementById("rotateArea");
 		if (gameLogic.endOfMatch($scope.state.playerStatus)) {
 			return;
 		}
@@ -107,14 +98,14 @@ angular.module('myApp')
 		clearDrag('board');
 		clearDrag('shape');
 		clearDrag('rotate');
-		var gameArea = document.getElementById("gameArea");
 		// compute horizontal and vertical offset relative to boardArea, shapeArea, and rotateArea
-		var boardX = clientX - document.getElementById("gameArea").offsetLeft;
-        var boardY = clientY - document.getElementById("gameArea").offsetTop;
-		var shapeX = clientX - document.getElementById("gameArea").offsetLeft;
-        var shapeY = clientY - document.getElementById("shapeAreaRow0").offsetTop;
-		var rotateX = clientX - document.getElementById("gameArea").offsetLeft;
-        var rotateY = clientY - document.getElementById("rotateAreaRow0").offsetTop;
+		// boardArea.offsetLeft = 0; boardArea.offsetTop = 0;
+		var boardX = clientX - gameArea.offsetLeft - boardArea.offsetLeft;
+		var shapeX = clientX - gameArea.offsetLeft - shapeArea.offsetLeft;
+		var rotateX = clientX - gameArea.offsetLeft - rotateArea.offsetLeft;
+        var boardY = clientY - gameArea.offsetTop - boardArea.offsetTop;
+        var shapeY = clientY - gameArea.offsetTop - shapeArea.offsetTop;
+        var rotateY = clientY - gameArea.offsetTop - rotateArea.offsetTop;
 		var dragType = '';
 		// initialize dragType
 		var boardSize = getAreaSize('board');
@@ -140,6 +131,7 @@ angular.module('myApp')
 		if (dragType === '') {
 			return;
 		}
+		console.log(dragType);
 		// Inside gameArea. Let's find the containing square's row and col
 		var num = getRowColNum(dragType);
 		var areaSize = getAreaSize(dragType);
@@ -189,7 +181,7 @@ angular.module('myApp')
 			return {rowsNum: 12, colsNum: 20};
 		} 
 		if (type === 'rotate') {
-			return {rowsNum: 9, colsNum: 20};
+			return {rowsNum: 12, colsNum: 20};
 		} 
 	}
 	function getSquareWidthHeight(type) {

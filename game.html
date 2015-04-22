@@ -33,7 +33,18 @@
 <body ng-cloak ng-controller="Ctrl">
 
 <div id="gameArea">
-		<svg id="boardDraggingLines" width="100%" height="60%"
+	<!-- boardArea-->
+	<div id="boardArea" style="position:absolute;top:0;left:0;width:100%;height:60%">
+		<div ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
+			style="position:absolute; top:{{row * 5}}%; left:0; width:100%; height:5%;">
+			<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
+				style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
+				ng-class = "{l: true, t: true, r: col === 19, b: row === 19, blink:newlyPlaced(row, col)}"
+				ng-style = "setBoardAreaSquareStyle(row, col)"
+				id="{{'e2e_test_board_div_' + row + 'x' + col}}">
+			</div>
+		</div>
+		<svg id="boardDraggingLines" width="100%" height="100%"
 			style="display:none;position:absolute; z-index: 60;">
 			<line id="boardHorizontalDraggingLine"
 				x1="0" y1="12.5%"
@@ -44,10 +55,23 @@
 				y1="0" x1="12.5%"
 				y2="100%" x2="12.5%"
 				stroke="grey"
-				stroke-width="0.5%"/>
+				stroke-width="0.25%"/>
 		</svg>
-		<svg id="shapeDraggingLines" width="100%" height="36%"
-			style="display:none;position:absolute;top:63%; left: 0; z-index: 60;">
+	</div>
+	<!-- shapeArea-->
+	<div id="shapeArea" style="position:absolute;top:63%;left:0;width:100%;height:36%" ng-show="shape===-1|| shape>=0 && rotate>=0">
+	    <div ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
+			style="position:absolute; top:{{row * 8.333}}%; left: 0; width:100%; height:8.333%;">
+				<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
+					style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
+					ng-class = "{l:col===0,t:row===0,r:col===19,b:row===11,blink:shape>=0&&getShape(row, col)===shape}"
+					id="{{'e2e_test_shape_div_' + row + 'x' + col}}"
+					
+					ng-style="getShapeCellColorStyle(row, col)">
+				</div>
+		</div>
+		<svg id="shapeDraggingLines" width="100%" height="100%"
+			style="display:none;position:absolute;top:0; left: 0; z-index:60;">
 			<line id="shapeHorizontalDraggingLine"
 				x1="0" y1="12.5%"
 				x2="100%" y2="12.5%"
@@ -59,8 +83,21 @@
 				stroke="grey"
 				stroke-width="0.5%"/>
 		</svg>
-		<svg id="rotateDraggingLines" width="100%" height="36%"
-			style="display:none;position:absolute; top:63%;left: 0; z-index: 60;">
+	</div>
+	<!--rotateArea-->
+	<div id="rotateArea" style="position:absolute;top:63%;left:0;width:100%;height:36%" ng-show="shape>=0&&rotate===-1">
+		<div id ng-repeat = "row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
+			style = "position:absolute;top:{{row * 8.333}}%; left:0; width:100%; height:8.333%;">
+				<div ng-repeat = "col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
+					style = "position:absolute;top:0;left:{{col*5}}%;width:5%; height:100%;"
+					ng-class = "{l:col===0,t:row===0,r:col===19,b:row===11,blink:shape>=0&&rotate!=-1&&getRotate(row, col)===rotate}"
+					ng-style = "getRotateAreaSquareColor(row, col)"
+					
+					id="{{'e2e_test_rotate_div_' + row + 'x' + col}}">
+				</div>
+		</div>
+		<svg id="rotateDraggingLines" width="100%" height="100%"
+			style="display:none;position:absolute; top:0;left: 0; z-index: 60;">
 			<line id="rotateHorizontalDraggingLine"
 				x1="0" y1="12.5%"
 				x2="100%" y2="12.5%"
@@ -72,42 +109,7 @@
 				stroke="grey"
 				stroke-width="0.5%"/>
 		</svg>
-	<!-- boardArea-->
-	<div class = "boardArea" style = "position:absolute;top:0;left:0;width:100%;height:60%">
-		<div id = "{{'boardAreaRow' + row}}"
-			ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-			style="position:absolute; top:{{row * 5}}%; left:0; width:100%; height:5%;">
-			<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-				style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
-				ng-class = "{l: true, t: true, r: col === 19, b: row === 19, blink:newlyPlaced(row, col)}"
-				ng-style = "setBoardAreaSquareStyle(row, col)"
-				id="{{'e2e_test_board_div_' + row + 'x' + col}}">
-			</div>
-		</div>			
 	</div>
-	    <div id = "{{'shapeAreaRow' + row}}" 
-			ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
-			style="position:absolute; top:{{63 + row * 3}}%; left: 0; width:100%; height:3%;">
-				<div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-					style="position:absolute; top:0; left:{{col * 5}}%; width:5%; height:100%;"
-					ng-class = "{l:col===0,t:row===0,r:col===19,b:row===11,blink:shape>=0&&getShape(row, col)===shape}"
-					id="{{'e2e_test_shape_div_' + row + 'x' + col}}"
-					ng-show="shape===-1|| shape>=0 && rotate>=0"
-					ng-style="getShapeCellColorStyle(row, col)">
-				</div>
-		</div>
-		
-		<div id = "{{'rotateAreaRow' + row}}" 
-			ng-repeat = "row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
-			style = "position:absolute;top:{{63 + row * 3}}%; left:0; width:100%; height:3%;">
-				<div ng-repeat = "col in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]"
-					style = "position:absolute;top:0;left:{{col*5}}%;width:5%; height:100%;"
-					ng-class = "{l:col===0,t:row===0,r:col===19,b:row===11,blink:shape>=0&&rotate!=-1&&getRotate(row, col)===rotate}"
-					ng-style = "getRotateAreaSquareColor(row, col)"
-					ng-show="shape>=0&&rotate===-1"
-					id="{{'e2e_test_rotate_div_' + row + 'x' + col}}">
-				</div>
-		</div>
 </div>
 
 </body>
