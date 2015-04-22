@@ -993,7 +993,7 @@ function getPlacement(row, col, shape, r) {
 		var color = ['#33CCFF', '#FF9900','#FF3399', '#99FF33'];
 		return color[$scope.turnIndex];
 	}
-    function setPlacementBackgroundColor(row, col, placement) {
+    function setPlacementBackgroundColor(placement) {
         for (var i = 0; i < placement.length; i++) {
 			var row = placement[i][0];
 			var col = placement[i][1];
@@ -1003,7 +1003,12 @@ function getPlacement(row, col, shape, r) {
 	function clearDrag(dragType) {
 		if (dragType === 'board') {
 			// reset boardArea background color;
-			setBoardBackgroundColor();
+			for (var i = 0; i < $scope.preview.length; i++) {
+				var row = $scope.preview[i][0];
+				var col = $scope.preview[i][1];
+				setSquareBackgroundColor(row, col, getBoardSquareColor(row, col));
+			}
+			//setBoardBackgroundColor();
 		}
 		var draggingLines = document.getElementById(dragType+"DraggingLines");
 		draggingLines.style.display = "none";
@@ -1075,7 +1080,6 @@ function getPlacement(row, col, shape, r) {
 		if (dragType === '') {
 			return;
 		}
-		console.log(dragType);
 		// Inside gameArea. Let's find the containing square's row and col
 		var num = getRowColNum(dragType);
 		var areaSize = getAreaSize(dragType);
@@ -1095,8 +1099,12 @@ function getPlacement(row, col, shape, r) {
 			if (!gameLogic.placementInBound($scope.state.board, placement) || gameLogic.isOccupied($scope.state.board, placement)){
 				return;
 			}
+			if(!angular.equals($scope.preview, placement)) {
+				clearDrag('board');
+				setPlacementBackgroundColor(placement);
+				$scope.preview = placement;
+			}
 			
-			setPlacementBackgroundColor(row, col, placement);
 		}
 
 		// displaying the dragging lines 
@@ -1188,9 +1196,8 @@ function getPlacement(row, col, shape, r) {
 		//$scope.state.freeShapes = params.stateAfterMove.freeShapes;
 		//$scope.state.playerStatus = params.stateAfterMove.playerStatus;
 		$scope.shape = -1; //initialize the shape being selected by current player
-		
 		$scope.rotate = -1; //initialize the rotate direction, DEV USE//03/31
-		
+		$scope.preview = []; // initialize the placement to be previewed on the board
 
 		if ($scope.state.board === undefined) {
 			$scope.state.board = gameLogic.getInitialBoard();
