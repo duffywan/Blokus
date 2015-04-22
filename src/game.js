@@ -100,6 +100,8 @@ angular.module('myApp')
 		if (!$scope.isYourTurn) {
 			return;
 		}
+		//clearDrag("rotate");
+		//clearDrag("shape");
 		// compute horizontal and vertical offset relative to boardArea, shapeArea, and rotateArea
 		// boardArea.offsetLeft = 0; boardArea.offsetTop = 0;
 		var boardX = clientX - gameArea.offsetLeft - boardArea.offsetLeft;
@@ -131,6 +133,9 @@ angular.module('myApp')
 		} 
 		// ignore if none of the valid drag
 		if (dragType === '') {
+			clearDrag('board');
+			clearDrag('shape');
+			clearDrag('rotate');
 			return;
 		}
 		// Inside gameArea. Let's find the containing square's row and col

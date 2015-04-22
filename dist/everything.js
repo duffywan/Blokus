@@ -1047,6 +1047,8 @@ function getPlacement(row, col, shape, r) {
 		if (!$scope.isYourTurn) {
 			return;
 		}
+		//clearDrag("rotate");
+		//clearDrag("shape");
 		// compute horizontal and vertical offset relative to boardArea, shapeArea, and rotateArea
 		// boardArea.offsetLeft = 0; boardArea.offsetTop = 0;
 		var boardX = clientX - gameArea.offsetLeft - boardArea.offsetLeft;
@@ -1078,6 +1080,9 @@ function getPlacement(row, col, shape, r) {
 		} 
 		// ignore if none of the valid drag
 		if (dragType === '') {
+			clearDrag('board');
+			clearDrag('shape');
+			clearDrag('rotate');
 			return;
 		}
 		// Inside gameArea. Let's find the containing square's row and col
