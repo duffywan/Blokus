@@ -1,9 +1,9 @@
 angular.module('myApp')
   .controller('Ctrl', 
       ['$scope', '$rootScope', '$log', '$timeout',
-       'gameService', 'stateService', 'gameLogic', 'resizeGameAreaService',
+       'gameService', 'gameLogic', 'resizeGameAreaService','dragAndDropService',
 		function ($scope,$rootScope, $log, $timeout,
-			gameService, stateService, gameLogic, resizeGameAreaService) {
+			gameService, gameLogic, resizeGameAreaService, dragAndDropService) {
 
     'use strict';
 		
@@ -67,7 +67,7 @@ angular.module('myApp')
 		draggingLines.style.display = "none";
     }
 	
-	window.handleDragEvent = handleDragEvent;
+	dragAndDropService.addDragListener("gameArea", handleDragEvent);
 	
 	function getAreaSize(type) {
 		var area = document.getElementById(type + "Area");
@@ -231,7 +231,7 @@ angular.module('myApp')
         });
     }
 	
-	window.e2e_test_stateService = stateService; //to allow us to load any state in our e2e tests.
+	//window.e2e_test_stateService = stateService; //to allow us to load any state in our e2e tests.
 	
 	// Before getting any updateUI, we initialize $scope variables (such as board)
     // and show an empty board to a viewer (so you can't perform moves).
