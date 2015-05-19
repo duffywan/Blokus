@@ -44,7 +44,7 @@ angular.module('myApp')
 
 	function getTurnColor() {
 		var color = ['#33CCFF', '#FF9900','#FF3399', '#99FF33'];
-		return color[$scope.turnIndex];
+		return color[$scope.internalTurnIndex]; // changed turnIndex 05/19
 	}
     function setPlacementBackgroundColor(placement) {
         for (var i = 0; i < placement.length; i++) {
@@ -238,8 +238,8 @@ angular.module('myApp')
     // updateUI({stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2}); this is a fake call;
 	gameService.setGame({
 		gameDeveloperEmail: "yw1840@nyu.edu",
-		minNumberOfPlayers: 4,
-		maxNumberOfPlayers: 4,
+		minNumberOfPlayers: 2, // updated May 19
+		maxNumberOfPlayers: 2, // updated May 19
 		isMoveOk: gameLogic.isMoveOk,
 		updateUI: updateUI
     });
@@ -256,7 +256,6 @@ angular.module('myApp')
 		$scope.shape = -1; //initialize the shape being selected by current player
 		$scope.rotate = -1; //initialize the rotate direction, DEV USE//03/31
 		$scope.preview = []; // initialize the placement to be previewed on the board
-
 		if ($scope.state.board === undefined) {
 			$scope.state.board = gameLogic.getInitialBoard();
 			$scope.state.freeShapes = gameLogic.getInitialFreeShapes();
@@ -265,7 +264,8 @@ angular.module('myApp')
 		$scope.isYourTurn = params.turnIndexAfterMove >= 0 && // game is ongoing
 			params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
 		$scope.turnIndex = params.turnIndexAfterMove;
-		// Is it the computer's turn?
+		$scope.internalTurnIndex = gameLogic.getInternalTurnIndex();	// initialize internal turn index
+		// Is it the computer's turn?	
 		if ($scope.isYourTurn &&
 			params.playersInfo[params.yourPlayerIndex].playerId === '') {
 			$scope.isYourTurn = false; // to make sure the UI won't send another move.
@@ -276,7 +276,7 @@ angular.module('myApp')
     }
 	function sendComputerMove() {
       // just randomly send a possible move;
-	  var items = gameLogic.getPossibleMoves($scope.state, $scope.turnIndex);
+	  var items = gameLogic.getPossibleMoves($scope.state, $scope.internalTurnIndex); // changed turnIndex 05/19
       gameService.makeMove(items[Math.floor(Math.random()*items.length)]);
     }
 	$scope.getRotateAreaSquareColor = function(row, col) {
@@ -633,7 +633,7 @@ angular.module('myApp')
 		}
 		try {
 			var placement = gameLogic.getPlacement(row, col, $scope.shape, $scope.rotate);
-			var move = gameLogic.createMove($scope.state, placement, $scope.shape, $scope.turnIndex);
+			var move = gameLogic.createMove($scope.state, placement, $scope.shape, $scope.internalTurnIndex); // changed turnIndex 05/19
 			$scope.isYourTurn = false; // to prevent making another move
 			gameService.makeMove(move);
 			$scope.shape = -1; // to reset the shape being selected
@@ -648,7 +648,7 @@ angular.module('myApp')
 		// row = row - 1;
 		var shapeNum = $scope.getShape(row, col);
 		// ignore if the shape has been used
-		if (!$scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
+		if (!$scope.state.freeShapes[$scope.internalTurnIndex][shapeNum]) { // changed turnIndex 05/19
 			return;
 		}
 	  $log.info(["Clicked on shape:", shapeNum]);
@@ -658,7 +658,8 @@ angular.module('myApp')
 	/*need to edit 03/26*/
 	$scope.getShapeCellColorStyle= function(row, col) {
 		var shapeNum = $scope.getShape(row, col);
-		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.turnIndex] != undefined && $scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
+		// changed turnIndex 05/19
+		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.internalTurnIndex] != undefined && $scope.state.freeShapes[$scope.internalTurnIndex][shapeNum]) {
 			var color = getTurnColor();
 			return {
 				border: '1pt solid white',

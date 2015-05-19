@@ -283,36 +283,41 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 			freeShapesAfterMove, playerStatus);
 	var firstOperation = updateTurnIndex(turnIndexBeforeMove,
 			playerStatusAfterMove, freeShapesAfterMove);
-	return [ firstOperation, {
-		set : {
+	return [ firstOperation, 
+	{set : {
 			key : 'board',
 			value : boardAfterMove
-		}
-	}, {
-		set : {
+		}}, 
+	{set : {
 			key : 'playerStatus',
 			value : playerStatusAfterMove
-		}
-	}, {
-		set : {
+		}}, 
+	{set : {
 			key : 'freeShapes',
 			value : freeShapesAfterMove
-		}
-	}, {
-		set : {
+		}}, 
+	{set : {
 			key : 'delta',
 			value : {
 				shape : shape,
 				placement : placement
 			}
-		}
-	} ];
+		}},
+	{set : {
+			key : 'internalTurnIndex',
+			value : getInternalTurnIndex()
+		}} 
+	];
 }
 
 function isMoveOk(params) {
 	var move = params.move;
+	console.log(params);
 	var stateBeforeMove = params.stateBeforeMove;
-	var turnIndexBeforeMove = params.turnIndexBeforeMove;
+	//var turnIndexBeforeMove = params.turnIndexBeforeMove;
+	var turnIndexBeforeMove = move[5].set.value;
+	turnIndexBeforeMove = (turnIndexBeforeMove + 3) % 4;
+	console.log("turnIndexBeforeMove +" + turnIndexBeforeMove);
 	try {
 		var shape = move[4].set.value.shape;
 		var placement = move[4].set.value.placement;
@@ -402,6 +407,8 @@ function shapeUsedUp(turnIndex, freeShapes) {
 	}
 	return true;
 }
+	/*global variable*/
+	var nextPlayer = 0;
 /** update updateTurnIndex after a move is completed */
 function updateTurnIndex(turnIndexBeforeMove, playerStatusAfterMove, freeShapes) {
 	var firstOperation = {};
@@ -412,14 +419,15 @@ function updateTurnIndex(turnIndexBeforeMove, playerStatusAfterMove, freeShapes)
 			}
 		};
 	} else {
-		var nextPlayer = (turnIndexBeforeMove + 1) % 4;
+		nextPlayer = (turnIndexBeforeMove + 1) % 4;
 		// find the next alive player
 		while (playerStatusAfterMove[nextPlayer] === false) {
 			nextPlayer = (nextPlayer + 1) % 4;
 		}
 		firstOperation = {
 			setTurn : {
-				turnIndex : nextPlayer
+				//turnIndex : nextPlayer
+				turnIndex : Math.floor(nextPlayer / 2)
 			}
 		};
 	}
@@ -930,6 +938,9 @@ function getPlacement(row, col, shape, r) {
 	}
 	return placement;
 }
+	function getInternalTurnIndex( ) {
+		return nextPlayer;
+	}
   return {
       getScore: getScore,
 	  endOfMatch: endOfMatch,
@@ -943,6 +954,7 @@ function getPlacement(row, col, shape, r) {
       getPossibleMoves: getPossibleMoves,
 	  isOccupied:isOccupied,
 	  placementInBound: placementInBound,
-	  getPossibleMovesWithSqaureN: getPossibleMovesWithSqaureN
+	  getPossibleMovesWithSqaureN: getPossibleMovesWithSqaureN,
+	  getInternalTurnIndex : getInternalTurnIndex
   };
 });
