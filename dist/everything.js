@@ -283,36 +283,41 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 			freeShapesAfterMove, playerStatus);
 	var firstOperation = updateTurnIndex(turnIndexBeforeMove,
 			playerStatusAfterMove, freeShapesAfterMove);
-	return [ firstOperation, {
-		set : {
+	return [ firstOperation, 
+	{set : {
 			key : 'board',
 			value : boardAfterMove
-		}
-	}, {
-		set : {
+		}}, 
+	{set : {
 			key : 'playerStatus',
 			value : playerStatusAfterMove
-		}
-	}, {
-		set : {
+		}}, 
+	{set : {
 			key : 'freeShapes',
 			value : freeShapesAfterMove
-		}
-	}, {
-		set : {
+		}}, 
+	{set : {
 			key : 'delta',
 			value : {
 				shape : shape,
 				placement : placement
 			}
-		}
-	} ];
+		}},
+	{set : {
+			key : 'internalTurnIndex',
+			value : getInternalTurnIndex()
+		}} 
+	];
 }
 
 function isMoveOk(params) {
 	var move = params.move;
+	console.log(params);
 	var stateBeforeMove = params.stateBeforeMove;
-	var turnIndexBeforeMove = params.turnIndexBeforeMove;
+	//var turnIndexBeforeMove = params.turnIndexBeforeMove;
+	var turnIndexBeforeMove = move[5].set.value;
+	turnIndexBeforeMove = (turnIndexBeforeMove + 3) % 4;
+	console.log("turnIndexBeforeMove +" + turnIndexBeforeMove);
 	try {
 		var shape = move[4].set.value.shape;
 		var placement = move[4].set.value.placement;
@@ -402,6 +407,8 @@ function shapeUsedUp(turnIndex, freeShapes) {
 	}
 	return true;
 }
+	/*global variable*/
+	var nextPlayer = 0;
 /** update updateTurnIndex after a move is completed */
 function updateTurnIndex(turnIndexBeforeMove, playerStatusAfterMove, freeShapes) {
 	var firstOperation = {};
@@ -412,14 +419,15 @@ function updateTurnIndex(turnIndexBeforeMove, playerStatusAfterMove, freeShapes)
 			}
 		};
 	} else {
-		var nextPlayer = (turnIndexBeforeMove + 1) % 4;
+		nextPlayer = (turnIndexBeforeMove + 1) % 4;
 		// find the next alive player
 		while (playerStatusAfterMove[nextPlayer] === false) {
 			nextPlayer = (nextPlayer + 1) % 4;
 		}
 		firstOperation = {
 			setTurn : {
-				turnIndex : nextPlayer
+				//turnIndex : nextPlayer
+				turnIndex : Math.floor(nextPlayer / 2)
 			}
 		};
 	}
@@ -930,6 +938,9 @@ function getPlacement(row, col, shape, r) {
 	}
 	return placement;
 }
+	function getInternalTurnIndex( ) {
+		return nextPlayer;
+	}
   return {
       getScore: getScore,
 	  endOfMatch: endOfMatch,
@@ -943,7 +954,8 @@ function getPlacement(row, col, shape, r) {
       getPossibleMoves: getPossibleMoves,
 	  isOccupied:isOccupied,
 	  placementInBound: placementInBound,
-	  getPossibleMovesWithSqaureN: getPossibleMovesWithSqaureN
+	  getPossibleMovesWithSqaureN: getPossibleMovesWithSqaureN,
+	  getInternalTurnIndex : getInternalTurnIndex
   };
 });;angular.module('myApp')
   .controller('Ctrl', 
@@ -991,7 +1003,7 @@ function getPlacement(row, col, shape, r) {
 
 	function getTurnColor() {
 		var color = ['#33CCFF', '#FF9900','#FF3399', '#99FF33'];
-		return color[$scope.turnIndex];
+		return color[$scope.internalTurnIndex]; // changed turnIndex 05/19
 	}
     function setPlacementBackgroundColor(placement) {
         for (var i = 0; i < placement.length; i++) {
@@ -1185,8 +1197,8 @@ function getPlacement(row, col, shape, r) {
     // updateUI({stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2}); this is a fake call;
 	gameService.setGame({
 		gameDeveloperEmail: "yw1840@nyu.edu",
-		minNumberOfPlayers: 4,
-		maxNumberOfPlayers: 4,
+		minNumberOfPlayers: 2, // updated May 19
+		maxNumberOfPlayers: 2, // updated May 19
 		isMoveOk: gameLogic.isMoveOk,
 		updateUI: updateUI
     });
@@ -1203,7 +1215,6 @@ function getPlacement(row, col, shape, r) {
 		$scope.shape = -1; //initialize the shape being selected by current player
 		$scope.rotate = -1; //initialize the rotate direction, DEV USE//03/31
 		$scope.preview = []; // initialize the placement to be previewed on the board
-
 		if ($scope.state.board === undefined) {
 			$scope.state.board = gameLogic.getInitialBoard();
 			$scope.state.freeShapes = gameLogic.getInitialFreeShapes();
@@ -1212,7 +1223,8 @@ function getPlacement(row, col, shape, r) {
 		$scope.isYourTurn = params.turnIndexAfterMove >= 0 && // game is ongoing
 			params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
 		$scope.turnIndex = params.turnIndexAfterMove;
-		// Is it the computer's turn?
+		$scope.internalTurnIndex = gameLogic.getInternalTurnIndex();	// initialize internal turn index
+		// Is it the computer's turn?	
 		if ($scope.isYourTurn &&
 			params.playersInfo[params.yourPlayerIndex].playerId === '') {
 			$scope.isYourTurn = false; // to make sure the UI won't send another move.
@@ -1223,7 +1235,7 @@ function getPlacement(row, col, shape, r) {
     }
 	function sendComputerMove() {
       // just randomly send a possible move;
-	  var items = gameLogic.getPossibleMoves($scope.state, $scope.turnIndex);
+	  var items = gameLogic.getPossibleMoves($scope.state, $scope.internalTurnIndex); // changed turnIndex 05/19
       gameService.makeMove(items[Math.floor(Math.random()*items.length)]);
     }
 	$scope.getRotateAreaSquareColor = function(row, col) {
@@ -1580,7 +1592,7 @@ function getPlacement(row, col, shape, r) {
 		}
 		try {
 			var placement = gameLogic.getPlacement(row, col, $scope.shape, $scope.rotate);
-			var move = gameLogic.createMove($scope.state, placement, $scope.shape, $scope.turnIndex);
+			var move = gameLogic.createMove($scope.state, placement, $scope.shape, $scope.internalTurnIndex); // changed turnIndex 05/19
 			$scope.isYourTurn = false; // to prevent making another move
 			gameService.makeMove(move);
 			$scope.shape = -1; // to reset the shape being selected
@@ -1595,7 +1607,7 @@ function getPlacement(row, col, shape, r) {
 		// row = row - 1;
 		var shapeNum = $scope.getShape(row, col);
 		// ignore if the shape has been used
-		if (!$scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
+		if (!$scope.state.freeShapes[$scope.internalTurnIndex][shapeNum]) { // changed turnIndex 05/19
 			return;
 		}
 	  $log.info(["Clicked on shape:", shapeNum]);
@@ -1605,7 +1617,8 @@ function getPlacement(row, col, shape, r) {
 	/*need to edit 03/26*/
 	$scope.getShapeCellColorStyle= function(row, col) {
 		var shapeNum = $scope.getShape(row, col);
-		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.turnIndex] != undefined && $scope.state.freeShapes[$scope.turnIndex][shapeNum]) {
+		// changed turnIndex 05/19
+		if (shapeNum >= 0 && $scope.state.freeShapes[$scope.internalTurnIndex] != undefined && $scope.state.freeShapes[$scope.internalTurnIndex][shapeNum]) {
 			var color = getTurnColor();
 			return {
 				border: '1pt solid white',
