@@ -273,6 +273,9 @@ angular.module('myApp')
 			// then the animation is paused until the javascript finishes.
 			$timeout(sendComputerMove, 500);
 		}
+		console.log("turnIndex: " + $scope.turnIndex);
+		console.log("internalTurnIndex" + $scope.internalTurnIndex);
+		console.log($scope.state.playerStatus);
     }
 	function sendComputerMove() {
       // just randomly send a possible move;

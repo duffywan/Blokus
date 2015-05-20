@@ -251,6 +251,7 @@ function getPossibleRotations(shape) {
 
 
 function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
+	var tmpIndex = turnIndexBeforeMove;
 	// example move = {setTurn(2), setBoard([[...]]), setPlayerStatus(true,
 	// false, true, true), setFreeShapes([...],[...],[...],[...])};
 	if (stateBeforeMove === undefined || stateBeforeMove.board === undefined) {
@@ -306,6 +307,10 @@ function createMove(stateBeforeMove, placement, shape, turnIndexBeforeMove) {
 	{set : {
 			key : 'internalTurnIndex',
 			value : getInternalTurnIndex()
+		}},
+		{set : {
+			key : 'lastIndex',
+			value : tmpIndex
 		}} 
 	];
 }
@@ -315,14 +320,16 @@ function isMoveOk(params) {
 	console.log(params);
 	var stateBeforeMove = params.stateBeforeMove;
 	//var turnIndexBeforeMove = params.turnIndexBeforeMove;
-	var turnIndexBeforeMove = move[5].set.value;
-	turnIndexBeforeMove = (turnIndexBeforeMove + 3) % 4;
-	console.log("turnIndexBeforeMove +" + turnIndexBeforeMove);
+	var last = move [6].set.value;
+	//console.log("turnIndexBeforeMove +" + turnIndexBeforeMove);
 	try {
 		var shape = move[4].set.value.shape;
 		var placement = move[4].set.value.placement;
 		var expectedMove = createMove(stateBeforeMove, placement, shape,
-				turnIndexBeforeMove);
+				last);
+		expectedMove [6].set.value = last;
+		console.log("expected move: ");
+		console.log(expectedMove);
 		if (!angular.equals(move, expectedMove)) {
 			return false;
 		}
@@ -343,7 +350,7 @@ function updateFreeShapes(turnIndexBeforeMove, freeShapes, shape) {
 	}
 	return freeShapesAfterMove;
 }
-
+/** return number of players who are */
 /** check whether the current player can make a move using shape available */
 function canMove(board, freeShapes, turnIndex) {
 	if (isFirstMove(board, turnIndex)) {
@@ -446,11 +453,10 @@ function endOfMatch(playerStatus) {
 
 /** implemented later */
 function getScore(freeShapes) {
-	var totalSquares = 90;
 	var score = [ 0, 0, 0, 0 ];
 	for (var i = 0; i < 4; i++) {
-		for (var j = 0; j < freeShapes[i].length; j++) {
-			if (freeShapes[i][j]) {
+		for (var j = 0; j < 21; j++) {
+			if (!freeShapes[i][j]) {
 				if (j === 0) {
 					score[i] += 1;
 				}
@@ -470,12 +476,13 @@ function getScore(freeShapes) {
 				}
 			}
 		}
-
+		if (shapeUsedUp(i, freeShapes)) {
+			score[i] += 20;
+		}
+		console.log(score);
 	}
-	for (var i = 0; i < 4; i++) {
-		score[i] = totalSquares - score[i];
-	}
-	return score;
+	// If a player played all of his or her pieces, he or she gets a bonus score of +20 points 
+	return [score[0] + score[1], score[2] + score[3]];
 }
 
 /** check whether a board cell is in bound of the board */
@@ -1232,6 +1239,9 @@ function getPlacement(row, col, shape, r) {
 			// then the animation is paused until the javascript finishes.
 			$timeout(sendComputerMove, 500);
 		}
+		console.log("turnIndex: " + $scope.turnIndex);
+		console.log("internalTurnIndex" + $scope.internalTurnIndex);
+		console.log($scope.state.playerStatus);
     }
 	function sendComputerMove() {
       // just randomly send a possible move;
