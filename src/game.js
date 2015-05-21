@@ -125,11 +125,13 @@ angular.module('myApp')
 			x = rotateX;
 			y = rotateY
 			dragType = 'rotate';
+			clearDrag('board');
 		} else if (($scope.shape===-1&&$scope.rotate===-1 || $scope.shape>=0&&$scope.rotate>=0)
 					&& shapeX < shapeSize.width && shapeY > 0 && shapeY < shapeSize.height){
 			x = shapeX;
 			y = shapeY;
 			dragType = 'shape';
+			clearDrag('rotate');
 		} 
 		// ignore if none of the valid drag
 		if (dragType === '') {
@@ -155,6 +157,7 @@ angular.module('myApp')
 			// Is the entire placement inside the board?
 			var placement = gameLogic.getPlacement(row, col, $scope.shape, $scope.rotate); /*find a way to get placement*/
 			if (!gameLogic.placementInBound($scope.state.board, placement) || gameLogic.isOccupied($scope.state.board, placement)){
+				clearDrag('board');
 				return;
 			}
 			if(!angular.equals($scope.preview, placement)) {
